@@ -77,6 +77,72 @@ public class Scanner {
                         estado = 10;
                         lexema += c;
                     }
+                    else if (c == '(') {
+                        Token t = new Token(TipoToken.LEFT_PAREN, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                    }
+                    else if (c == ')') {
+                        Token t = new Token(TipoToken.RIGHT_PAREN, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                    }
+                    else if (c == '{') {
+                        Token t = new Token(TipoToken.LEFT_BRACE, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                    }
+                    else if (c == '}') {
+                        Token t = new Token(TipoToken.RIGHT_BRACE, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                    }
+                    else if (c == ',') {
+                        Token t = new Token(TipoToken.COMMA, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                    }
+                    else if (c == '.') {
+                        Token t = new Token(TipoToken.DOT, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                    }
+                    else if (c == '+') {
+                        Token t = new Token(TipoToken.PLUS, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                    }
+                    else if (c == '-') {
+                        Token t = new Token(TipoToken.MINUS, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                    }
+                    else if (c == '*') {
+                        Token t = new Token(TipoToken.STAR, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                    }
+                    else if (c == '/') {
+                        Token t = new Token(TipoToken.SLASH, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                    }
+                    else if (c == ';') {
+                        Token t = new Token(TipoToken.SEMICOLON, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                    }
                     break;
 
                 case 1:
@@ -276,7 +342,7 @@ public class Scanner {
                 return Integer.valueOf(lexema);
             }
         } catch (NumberFormatException e) {
-            return lexema; // Si no es un número válido, retornar como cadena
+            return lexema;
         }
     }
 }
