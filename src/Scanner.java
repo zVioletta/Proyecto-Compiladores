@@ -130,11 +130,8 @@ public class Scanner {
                         lexema = "";
                     }
                     else if (c == '/') {
+                        estado = 26;
                         lexema += c;
-                        Token t = new Token(TipoToken.SLASH, lexema);
-                        tokens.add(t);
-                        estado = 0;
-                        lexema = "";
                     }
                     else if (c == ';') {
                         lexema += c;
@@ -142,6 +139,10 @@ public class Scanner {
                         tokens.add(t);
                         estado = 0;
                         lexema = "";
+                    }
+                    else if (c == '"') {
+                        estado = 24;
+                        lexema += c;
                     }
                     break;
 
@@ -175,6 +176,7 @@ public class Scanner {
                          tokens.add(t);
                          estado = 0;
                          lexema = "";
+                         i--;
                     }
                     break;
 
@@ -191,6 +193,7 @@ public class Scanner {
                         tokens.add(t);
                         estado = 0;
                         lexema = "";
+                        i--;
                     }
                     break;
 
@@ -207,12 +210,12 @@ public class Scanner {
                         tokens.add(t);
                         estado = 0;
                         lexema = "";
+                        i--;
                     }
                     break;
 
                 case 13:
                     if (Character.isLetterOrDigit(c)) {
-                        estado = 13;
                         lexema += c;
                     }
                     else {
@@ -233,7 +236,6 @@ public class Scanner {
 
                 case 15:
                     if (Character.isDigit(c)) {
-                        estado = 15;
                         lexema += c;
                     }
                     else if (c == '.') {
@@ -269,7 +271,6 @@ public class Scanner {
 
                 case 17:
                     if (Character.isDigit(c)) {
-                        estado = 17;
                         lexema += c;
                     } else if (c == 'E') {
                         estado = 18;
@@ -304,13 +305,66 @@ public class Scanner {
 
                 case 20:
                     if (Character.isDigit(c)) {
-                        estado = 20;
                         lexema += c;
                     } else { // Case 21
                         Token t = new Token(TipoToken.NUMBER, lexema, parseLiteral(lexema));
                         lexema = "";
                         estado = 0;
                         i--;
+                    }
+                    break;
+
+                case 24:
+                    if (Character.isLetterOrDigit(c) || Character.isWhitespace(c)) {
+                        lexema += c;
+                    }
+                    else if (c == '"') {
+                        lexema += c;
+                        Token t = new Token(TipoToken.STRING, lexema, lexema.replaceAll("\"", ""));
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    } else {
+                        throw new RuntimeException("Saltos de linea no aceptados en la cadena" + c);
+                    }
+                    break;
+
+                case 26:
+                    if (c == '*') {
+                        estado = 27;
+                        lexema = "";
+                    }
+                    else if (c == '/') {
+                        estado = 30;
+                        lexema = "";
+                    } else {
+                        Token t = new Token(TipoToken.SLASH, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+                    break;
+
+                case 27:
+                    if(c == '*'){
+                        estado = 28;
+                    }
+                    break;
+
+                case 28:
+                    if (c == '/') {
+                        estado = 0;
+                    }
+                    else if (c != '*') {
+                        estado = 27;
+                    }
+                    break;
+
+                case 30:
+                    if(c == '\n'){
+                        estado = 0;
                     }
                     break;
             }
