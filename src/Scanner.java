@@ -324,7 +324,6 @@ public class Scanner {
                         tokens.add(t);
                         estado = 0;
                         lexema = "";
-                        i--;
                     } else {
                         throw new RuntimeException("Saltos de linea no aceptados en la cadena" + c);
                     }
