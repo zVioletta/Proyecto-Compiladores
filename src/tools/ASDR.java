@@ -3,33 +3,30 @@ package tools;
 import java.util.List;
 
 public class ASDR implements Parser{
-    private int i = 0;
+    public static int i = 0;
+    public static Token preAn;
     private boolean err = false;
-    private Token preAn;
-    private final List<Token> tokens;
+    public static List<Token> tokens = null;
+
 
     public ASDR(List<Token> tokens){
-        this.tokens = tokens;
-        preAn = this.tokens.get(i);
+        ASDR.tokens = tokens;
+        preAn = ASDR.tokens.get(i);
     }
+
 
     @Override
     public boolean parse() {
-        //TODO Llamado a la primera función
         return false;
     }
 
-
-
-    /*  TENER EN CUENTA CÓDIGO PARA POSTERIORES REVISIONES
+    // TENER EN CUENTA CÓDIGO PARA POSTERIORES REVISIONES
     //! Q -> select D from T
     private void Q(){
-        match(tools.TipoToken.SELECT);
+        Match(tools.TipoToken.SELECT);
         D();
-        match(tools.TipoToken.FROM);
+        Match(tools.TipoToken.FROM);
         T();
-
-
     }
 
     //! D -> distinct P | P
@@ -38,7 +35,7 @@ public class ASDR implements Parser{
 
         //! Primera proyección D -> distinct P
         if(preAn.tipo == tools.TipoToken.DISTINCT){
-            match(tools.TipoToken.DISTINCT);
+            Match(tools.TipoToken.DISTINCT);
             P();
             //! Segunda proyección D -> P
         }else if (preAn.tipo == tools.TipoToken.ASTERISCO || preAn.tipo == tools.TipoToken.IDENTIFICADOR) {
@@ -56,7 +53,7 @@ public class ASDR implements Parser{
 
         //! Primera proyección  P -> *
         if(preAn.tipo == tools.TipoToken.ASTERISCO){
-            match(tools.TipoToken.ASTERISCO);
+            Match(tools.TipoToken.ASTERISCO);
             //! Segunda proyección  P -> A
         }else if(preAn.tipo == tools.TipoToken.IDENTIFICADOR){
             A();
@@ -80,7 +77,7 @@ public class ASDR implements Parser{
         if(err) return;
 
         if(preAn.tipo == tools.TipoToken.IDENTIFICADOR){
-            match(tools.TipoToken.IDENTIFICADOR);
+            Match(tools.TipoToken.IDENTIFICADOR);
             A3();
         }else{
             err = true;
@@ -93,7 +90,7 @@ public class ASDR implements Parser{
         if(err) return;
 
         if(preAn.tipo == tools.TipoToken.COMA){
-            match(tools.TipoToken.COMA);
+            Match(tools.TipoToken.COMA);
             A();
         }
     }
@@ -103,8 +100,8 @@ public class ASDR implements Parser{
         if(err) return;
 
         if(preAn.tipo == tools.TipoToken.PUNTO){
-            match(tools.TipoToken.PUNTO);
-            match(tools.TipoToken.IDENTIFICADOR);
+            Match(tools.TipoToken.PUNTO);
+            Match(tools.TipoToken.IDENTIFICADOR);
         }
     }
 
@@ -121,7 +118,7 @@ public class ASDR implements Parser{
         if(err) return;
 
         if ( this.preAn.tipo == tools.TipoToken.COMA ) {
-            match( tools.TipoToken.COMA );
+            Match( tools.TipoToken.COMA );
             T();
         }
     }
@@ -132,7 +129,7 @@ public class ASDR implements Parser{
         if(err) return;
 
         if( this.preAn.tipo == tools.TipoToken.IDENTIFICADOR ) {
-            match( tools.TipoToken.IDENTIFICADOR );
+            Match( tools.TipoToken.IDENTIFICADOR );
             T3();
         }else{
             err = true;
@@ -144,18 +141,7 @@ public class ASDR implements Parser{
     private void T3(){
         if(err) return;
         if(preAn.tipo == tools.TipoToken.IDENTIFICADOR){
-            match(tools.TipoToken.IDENTIFICADOR);
-        }
-    }
-     */
-
-    private void match(TipoToken tt){
-        if(preAn.tipo == tt){
-            i++;
-            preAn = tokens.get(i);
-        }else{
-            err = true;
-            System.out.println("Error encontrado");
+            Match(tools.TipoToken.IDENTIFICADOR);
         }
     }
 }

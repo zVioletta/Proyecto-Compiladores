@@ -1,8 +1,7 @@
 package tools;
 
 public class Token {
-
-    final TipoToken tipo;
+    public final TipoToken tipo;
     final String lexema;
     final Object literal;
 
