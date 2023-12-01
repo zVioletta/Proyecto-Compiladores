@@ -1,6 +1,6 @@
-package mx.ipn.escom.k.parser;
+package parser;
 
-import mx.ipn.escom.k.tools.Token;
+import tools.Token;
 
 class ExprVariable extends Expression {
     final Token name;

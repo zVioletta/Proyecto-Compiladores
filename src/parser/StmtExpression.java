@@ -1,4 +1,4 @@
-package mx.ipn.escom.k.parser;
+package parser;
 
 public class StmtExpression extends Statement {
     final Expression expression;

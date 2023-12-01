@@ -1,3 +1,5 @@
+package tools;
+
 public class Token {
 
     final TipoToken tipo;

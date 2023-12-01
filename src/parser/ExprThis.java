@@ -1,9 +1,9 @@
-package mx.ipn.escom.k.parser;
+package parser;
 
-import mx.ipn.escom.k.tools.Token;
+import tools.Token;
 
 public class ExprThis extends Expression{
-    // final Token keyword;
+    // final tools.Token keyword;
 
     ExprThis() {
         // this.keyword = keyword;
