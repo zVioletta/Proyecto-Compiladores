@@ -1,6 +1,7 @@
-public class Token {
+package tools;
 
-    final TipoToken tipo;
+public class Token {
+    public final TipoToken tipo;
     final String lexema;
     final Object literal;
 

@@ -1,6 +1,6 @@
 package parser;
 
-import scanner.Token;
+import tools.Token;
 
 public class ExprAssign extends Expression{
     final Token name;

@@ -1,6 +1,6 @@
-package mx.ipn.escom.k.parser;
+package parser;
 
-import mx.ipn.escom.k.tools.Token;
+import tools.Token;
 
 public class ExprBinary extends Expression{
     final Expression left;
@@ -12,5 +12,4 @@ public class ExprBinary extends Expression{
         this.operator = operator;
         this.right = right;
     }
-
 }

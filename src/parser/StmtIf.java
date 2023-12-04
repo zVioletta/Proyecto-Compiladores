@@ -1,4 +1,6 @@
-package mx.ipn.escom.k.parser;
+package parser;
+
+import tools.*;
 
 public class StmtIf extends Statement {
     final Expression condition;
@@ -9,5 +11,13 @@ public class StmtIf extends Statement {
         this.condition = condition;
         this.thenBranch = thenBranch;
         this.elseBranch = elseBranch;
+        if (ASDR.preAn.tipo.equals(TipoToken.IF)) {
+            new Match(TipoToken.IF);
+            new Match(TipoToken.LEFT_PAREN);
+            condition = new Expression();
+            new Match(TipoToken.RIGHT_PAREN);
+            new StmtElse(elseBranch);
+
+        }
     }
 }

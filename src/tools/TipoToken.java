@@ -1,3 +1,5 @@
+package tools;
+
 public enum TipoToken {
     // Tokens de un sólo caracter
     LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
@@ -15,6 +17,6 @@ public enum TipoToken {
     // Palabras clave
     AND, ELSE, FALSE, FUN, FOR, IF, NULL, OR,
     PRINT, RETURN, TRUE, VAR, WHILE,
-
+    
     EOF
 }

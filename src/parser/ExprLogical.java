@@ -1,6 +1,6 @@
-package mx.ipn.escom.k.parser;
+package parser;
 
-import mx.ipn.escom.k.tools.Token;
+import tools.Token;
 
 public class ExprLogical extends Expression{
     final Expression left;
@@ -13,4 +13,3 @@ public class ExprLogical extends Expression{
         this.right = right;
     }
 }
-

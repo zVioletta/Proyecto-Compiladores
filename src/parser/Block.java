@@ -1,20 +1,18 @@
 package parser;
 
-import tools.*;
+import tools.ASDR;
 import tools.Error;
+import tools.TipoToken;
 
-import java.util.List;
-
-public class StmtBlock extends Statement{
-    final List<Statement> statements;
-
-    StmtBlock(List<Statement> statements) {
-        this.statements = statements;
+public class Block extends Statement{
+    Declaration declaration;
+    public boolean Block(Declaration declaration) {
         if (ASDR.preAn.tipo.equals(TipoToken.LEFT_BRACE)) {
             ASDR.i++;
-            if (statements != null) {
+            if (declaration != null) {
                 if (ASDR.preAn.tipo.equals(TipoToken.RIGHT_BRACE)) {
                     ASDR.i++;
+                    return true;
                 } else {
                     new Error();
                 }
@@ -22,5 +20,6 @@ public class StmtBlock extends Statement{
                 new Error();
             }
         }
+        return false;
     }
 }

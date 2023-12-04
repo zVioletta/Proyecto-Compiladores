@@ -1,3 +1,5 @@
+package tools;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -44,6 +46,11 @@ public class Interprete {
         try{
             Scanner scanner = new Scanner(source);
             List<Token> tokens = scanner.scan();
+
+            // Imprime cada token generado
+
+            Parser parser = new ASDR(tokens);
+            parser.parse();
             for(Token token : tokens){
                 System.out.println(token);
             }
@@ -53,6 +60,11 @@ public class Interprete {
         }
     }
 
+    /*
+    El método error se puede usar desde las distintas clases
+    para reportar los errores:
+    tools.Interprete.error(....);
+     */
     static void error(int linea, String mensaje){
         reportar(linea, "", mensaje);
     }

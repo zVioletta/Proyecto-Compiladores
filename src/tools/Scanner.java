@@ -1,3 +1,5 @@
+package tools;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -261,7 +263,7 @@ public class Scanner {
                         lexema += c;
                     } else {
                         throw new RuntimeException("Numero no valido: " + c);
-//                        Token t = new Token(TipoToken.NUMBER, lexema, parseLiteral(lexema));
+//                        tools.Token t = new tools.Token(tools.TipoToken.NUMBER, lexema, parseLiteral(lexema));
 //                        tokens.add(t);
 //                        lexema = "";
 //                        estado = 0;
