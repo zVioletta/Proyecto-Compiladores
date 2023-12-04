@@ -1,24 +1,20 @@
 package parser;
 
-import tools.ASDR;
-import tools.Token;
-import tools.TipoToken;
+import tools.*;
 import tools.Error;
 
 import java.util.List;
 
-abstract class Arguments extends Expression {
-    int i;
-    Token preAn;
-    List<Token> tokens;
+public class Arguments extends Expression {
 
     boolean Arguments() {
-        preAn = this.tokens.get(i);
-        if (preAn.tipo.equals(TipoToken.COMMA)) {
-            i++;
+        if (ASDR.preAn.tipo.equals(TipoToken.COMMA)) {
+            new Match(TipoToken.COMMA);
+            ASDR.i++;
             if (Expression()) {
+                ASDR.i++;
                 if (Arguments()) {
-                    return true;
+                    new Arguments();
                 } else {
                     new Error();
                 }

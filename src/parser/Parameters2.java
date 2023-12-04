@@ -2,17 +2,18 @@ package parser;
 
 import tools.ASDR;
 import tools.Error;
+import tools.Match;
 import tools.TipoToken;
 
 public class Parameters2 {
 
     public boolean Parameters2(){
         if (ASDR.preAn.tipo.equals(TipoToken.COMMA)) {
-            ASDR.i++;
+            new Match(TipoToken.COMMA);
             if (ASDR.preAn.tipo.equals(TipoToken.IDENTIFIER)) {
-                ASDR.i++;
+                new Match(TipoToken.IDENTIFIER);
                 if (Parameters2()) {
-                    return true;
+                    new Parameters2();
                 } else {
                     new Error();
                 }
@@ -20,7 +21,7 @@ public class Parameters2 {
                 new Error();
             }
         } else {
-            return true;
+            new Match(TipoToken.EOF);
         }
         return false;
     }

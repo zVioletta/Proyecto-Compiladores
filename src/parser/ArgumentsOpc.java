@@ -7,7 +7,7 @@ public class ArgumentsOpc extends Arguments{
     boolean ArgumentsOpc(){
         if (Expression()) {
             if (Arguments()) {
-                return true;
+                new Arguments();
             } else {
                 new Error();
             }

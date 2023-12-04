@@ -1,6 +1,6 @@
 package parser;
 
-import tools.Token;
+import tools.*;
 
 import java.util.List;
 

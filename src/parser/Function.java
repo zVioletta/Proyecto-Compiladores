@@ -1,6 +1,7 @@
 package parser;
 
 import tools.ASDR;
+import tools.Match;
 import tools.TipoToken;
 import tools.Token;
 
@@ -10,13 +11,13 @@ public class Function extends ParametersOpc {
 
     public boolean Function(List<Token> tokens) {
         if (ASDR.preAn.tipo.equals(TipoToken.IDENTIFIER)) {
-            ASDR.i++;
+            new Match(TipoToken.IDENTIFIER);
             if (ASDR.preAn.tipo.equals(TipoToken.LEFT_PAREN)) {
-                ASDR.i++;
+                new Match(TipoToken.LEFT_PAREN);
                 if (ParametersOpc()) {
-                    ASDR.i++;
+                    ParametersOpc();
                     if (ASDR.preAn.tipo == TipoToken.RIGHT_PAREN) {
-                        ASDR.i++;
+                        new Match(TipoToken.RIGHT_PAREN);
                         if (Block()) {
                             return true;
                         } else {

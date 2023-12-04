@@ -1,16 +1,15 @@
 package parser;
 
-import tools.ASDR;
+import tools.*;
 import tools.Error;
-import tools.TipoToken;
 
-abstract class Parameters extends Parameters2{
+public class Parameters extends Parameters2{
 
     public boolean Parameters() {
         if (ASDR.preAn.tipo.equals(TipoToken.IDENTIFIER)) {
-            ASDR.i++;
+            new Match(TipoToken.IDENTIFIER);
             if (Parameters2()) {
-                return true;
+                Parameters2();
             } else {
                 new Error();
             }

@@ -4,8 +4,11 @@ import java.util.List;
 
 public class Match {
     List<Token> tokens;
+    public Match(){
 
-    Match (TipoToken tt) {
+    }
+
+    public Match(TipoToken tt) {
         ASDR.preAn = this.tokens.get(ASDR.i);
         if(ASDR.preAn.tipo == tt){
             ASDR.i++;

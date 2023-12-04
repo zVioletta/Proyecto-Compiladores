@@ -1,6 +1,8 @@
 package parser;
 
-import javax.swing.plaf.nimbus.State;
+import tools.*;
+import tools.Error;
+
 import java.util.List;
 
 public class StmtBlock extends Statement{
@@ -8,5 +10,17 @@ public class StmtBlock extends Statement{
 
     StmtBlock(List<Statement> statements) {
         this.statements = statements;
+        if (ASDR.preAn.tipo.equals(TipoToken.LEFT_BRACE)) {
+            ASDR.i++;
+            if (statements != null) {
+                if (ASDR.preAn.tipo.equals(TipoToken.RIGHT_BRACE)) {
+                    ASDR.i++;
+                } else {
+                    new Error();
+                }
+            } else {
+                new Error();
+            }
+        }
     }
 }

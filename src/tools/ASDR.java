@@ -20,6 +20,7 @@ public class ASDR implements Parser{
         return false;
     }
 
+    /*
     // TENER EN CUENTA CÓDIGO PARA POSTERIORES REVISIONES
     //! Q -> select D from T
     private void Q(){
@@ -144,4 +145,5 @@ public class ASDR implements Parser{
             Match(tools.TipoToken.IDENTIFICADOR);
         }
     }
+    */
 }

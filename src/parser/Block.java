@@ -5,10 +5,11 @@ import tools.Error;
 import tools.TipoToken;
 
 public class Block extends Statement{
-    public boolean Block(){
+    Declaration declaration;
+    public boolean Block(Declaration declaration) {
         if (ASDR.preAn.tipo.equals(TipoToken.LEFT_BRACE)) {
             ASDR.i++;
-            if (Declaration()) {
+            if (declaration != null) {
                 if (ASDR.preAn.tipo.equals(TipoToken.RIGHT_BRACE)) {
                     ASDR.i++;
                     return true;
@@ -18,7 +19,6 @@ public class Block extends Statement{
             } else {
                 new Error();
             }
-
         }
         return false;
     }
