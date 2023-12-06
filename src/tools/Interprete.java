@@ -13,13 +13,8 @@ public class Interprete {
     static boolean existenErrores = false;
 
     public static void main(String[] args) throws IOException {
-
-        // Verifica la cantidad de argumentos en la línea de comandos
-
         if(args.length > 1) {
             System.out.println("Uso correcto: interprete [archivo.txt]");
-
-            // Convención defininida en el archivo "system.h" de UNIX
             System.exit(64);
         } else if(args.length == 1){
             ejecutarArchivo(args[0]);
@@ -29,13 +24,8 @@ public class Interprete {
     }
 
     private static void ejecutarArchivo(String path) throws IOException {
-
-      // Lee el contenido del archivo y lo ejecuta
-
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         ejecutar(new String(bytes, Charset.defaultCharset()));
-
-        // Se indica que existe un error
         if(existenErrores) System.exit(65);
     }
 
@@ -46,9 +36,9 @@ public class Interprete {
         for(;;){
             System.out.print(">>> ");
             String linea = reader.readLine();
-            if(linea == null) break; // Presionar Ctrl + D
+            if(linea == null) break;
             ejecutar(linea);
-            existenErrores = false; // Restablece el indicador de errores
+            existenErrores = false;
         }
     }
 
@@ -68,7 +58,6 @@ public class Interprete {
         catch (Exception ex){
             ex.printStackTrace();
         }
-
     }
 
     /*
@@ -81,13 +70,9 @@ public class Interprete {
     }
 
     private static void reportar(int linea, String posicion, String mensaje){
-
-        // Imprime mensajes de error formateados en la consola
-
         System.err.println(
                 "[linea " + linea + "] Error " + posicion + ": " + mensaje
         );
         existenErrores = true;
     }
-
 }
