@@ -17,126 +17,126 @@ public class Parser {
 
     // TODO Revisar GLC para poder realizar pruebas
     /*
-     * ! PROGRAM -> DECLARATION
+     ! PROGRAM -> DECLARATION
      *
      * -----
      *
-     * ? DECLARATION -> FUN_DECLARATION DECLARATION
-     * ? DECLARATION -> VAR_DECLARATION DECLARATION
-     * ? DECLARATION -> STATEMENT DECLARATION
-     * ? DECLARATION -> Ɛ
+     ? DECLARATION -> FUN_DECLARATION DECLARATION
+     ? DECLARATION -> VAR_DECLARATION DECLARATION
+     ? DECLARATION -> STATEMENT DECLARATION
+     ? DECLARATION -> Ɛ
      *
-     * ? FUN_DECLARATION -> fun FUNCTION
-     * ? VAR_DECLARATION -> var id VAR_INIT ;
-     * ? VAR_INIT -> = EXPRESSION
-     * ? VAR_INIT -> Ɛ
-     *
-     * -----
-     *
-     * ! STATEMENT -> EXPR_STMT
-     * ! STATEMENT -> FOR_STMT
-     * ! STATEMENT -> IF_STMT
-     * ! STATEMENT -> PRINT_STMT
-     * ! STATEMENT -> RETURN_STMT
-     * ! STATEMENT -> WHILE_STMT
-     * ! STATEMENT -> BLOCK
-     *
-     * ! EXPR_STMT -> EXPRESSION ;
-     *
-     * ! FOR_STMT -> for ( FOR_STMT1 ; FOR_STMT2 ; FOR_STMT3 ) STATEMENT
-     * ! FOR_STMT1 -> VAR_DECLARATION
-     * ! FOR_STMT1 -> EXPR_STMT
-     * ! FOR_STMT1 -> ;
-     * ! FOR_STMT2 -> EXPRESSION ;
-     * ! FOR_STMT2 -> ;
-     * ! FOR_STMT3 -> EXPRESSION
-     * ! FOR_STMT3 -> Ɛ
-     *
-     * ! IF_STMT -> if ( EXPRESSION ) STATEMENT ELSE_STATEMENT
-     * ! ELSE_STATEMENT -> else STATEMENT
-     *
-     * ? PRINT_STMT -> print EXPRESSION ;
-     *
-     * ? RETURN_STMT -> return RETURN_EXPR_OPC ;
-     * ? RETURN_EXPR_OPC -> EXPRESSION
-     * ? RETURN_EXPR_OPC -> Ɛ
-     *
-     * ? WHILE_STMT -> while ( EXPRESSION ) STATEMENT
-     *
-     * ! BLOCK -> { DECLARATION }
+     ? FUN_DECLARATION -> fun FUNCTION
+     ? VAR_DECLARATION -> var id VAR_INIT ;
+     ? VAR_INIT -> = EXPRESSION
+     ? VAR_INIT -> Ɛ
      *
      * -----
      *
-     * ! EXPRESSION -> ASSIGNMENT
+     ! STATEMENT -> EXPR_STMT
+     ! STATEMENT -> FOR_STMT
+     ! STATEMENT -> IF_STMT
+     ! STATEMENT -> PRINT_STMT
+     ! STATEMENT -> RETURN_STMT
+     ! STATEMENT -> WHILE_STMT
+     ! STATEMENT -> BLOCK
      *
-     * ! ASSIGNMENT -> LOGIC_OR ASSIGNMENT_OPC
-     * ! ASSIGNMENT_OPC -> = EXPRESSION
-     * ! ASSIGNMENT_OPC -> Ɛ
+     ! EXPR_STMT -> EXPRESSION ;
      *
-     * ! LOGIC_OR -> LOGIC_AND LOGIC_OR_2
-     * ! LOGIC_OR_2 -> or LOGIC_AND LOGIC_OR_2
-     * ! LOGIC_OR_2 -> Ɛ
+     ! FOR_STMT -> for ( FOR_STMT1 ; FOR_STMT2 ; FOR_STMT3 ) STATEMENT
+     ! FOR_STMT1 -> VAR_DECLARATION
+     ! FOR_STMT1 -> EXPR_STMT
+     ! FOR_STMT1 -> ;
+     ! FOR_STMT2 -> EXPRESSION ;
+     ! FOR_STMT2 -> ;
+     ! FOR_STMT3 -> EXPRESSION
+     ! FOR_STMT3 -> Ɛ
      *
-     * ! LOGIC_AND -> EQUALITY LOGIC_AND_2
-     * ! LOGIC_AND_2 -> and EQUALITY LOGIC_AND_2
-     * ! LOGIC_AND_2 -> Ɛ
+     ! IF_STMT -> if ( EXPRESSION ) STATEMENT ELSE_STATEMENT
+     ! ELSE_STATEMENT -> else STATEMENT
      *
-     * ! EQUALITY -> COMPARISON EQUALITY_2
-     * ! EQUALITY_2 -> != COMPARISON EQUALITY_2
-     * ! EQUALITY_2 -> == COMPARISON EQUALITY_2
-     * ! EQUALITY_2 -> Ɛ
+     ? PRINT_STMT -> print EXPRESSION ;
      *
-     * ! COMPARISON -> TERM COMPARISON_2
-     * ! COMPARISON_2 -> > TERM COMPARISON_2
-     * ! COMPARISON_2 -> < TERM COMPARISON_2
-     * ! COMPARISON_2 -> >= TERM COMPARISON_2
-     * ! COMPARISON_2 -> <= TERM COMPARISON_2
-     * ! COMPARISON_2 -> Ɛ
+     ? RETURN_STMT -> return RETURN_EXPR_OPC ;
+     ? RETURN_EXPR_OPC -> EXPRESSION
+     ? RETURN_EXPR_OPC -> Ɛ
      *
-     * ! TERM -> FACTOR TERM_2
-     * ! TERM_2 -> + FACTOR TERM_2
-     * ! TERM_2 -> - FACTOR TERM_2
-     * ! TERM_2 -> Ɛ
+     ? WHILE_STMT -> while ( EXPRESSION ) STATEMENT
      *
-     * ! FACTOR -> UNARY FACTOR_2
-     * ! FACTOR_2 -> * UNARY FACTOR_2
-     * ! FACTOR_2 -> / UNARY FACTOR_2
-     * ! FACTOR_2 -> Ɛ
-     *
-     * ! UNARY -> ! UNARY
-     * ! UNARY -> - UNARY
-     * ! UNARY -> CALL
-     *
-     * ! CALL -> PRIMARY CALL_2
-     * ! CALL_2 -> ( ARGUMENTS_OPC ) CALL_2
-     * ! CALL_2 -> Ɛ
-     *
-     * ? PRIMARY -> ( EXPRESSION )
-     * ? PRIMARY -> NUMBER
-     * ? PRIMARY -> STRING
-     * ? PRIMARY -> TRUE
-     * ? PRIMARY -> FALSE
-     * ? PRIMARY -> IDENTIFIER
-     * ? PRIMARY -> NULL
+     ! BLOCK -> { DECLARATION }
      *
      * -----
      *
-     * ! FUNCTION -> id ( PARAMETERS_OPC ) BLOCK
-     * ! FUNCTIONS -> FUN_DECLARATION FUNCTIONS
-     * ! FUNCTIONS -> Ɛ
+     ! EXPRESSION -> ASSIGNMENT
      *
-     * ! PARAMETERS_OPC -> PARAMETERS
-     * ! PARAMETERS_OPC -> Ɛ
+     ! ASSIGNMENT -> LOGIC_OR ASSIGNMENT_OPC
+     ! ASSIGNMENT_OPC -> = EXPRESSION
+     ! ASSIGNMENT_OPC -> Ɛ
      *
-     * ! PARAMETERS -> id PARAMETERS_2
-     * ! PARAMETERS_2 -> , id PARAMETERS_2
-     * ! PARAMETERS_2 -> Ɛ
+     ! LOGIC_OR -> LOGIC_AND LOGIC_OR_2
+     ! LOGIC_OR_2 -> or LOGIC_AND LOGIC_OR_2
+     ! LOGIC_OR_2 -> Ɛ
      *
-     * ! ARGUMENTS_OPC -> EXPRESSION ARGUMENTS
-     * ! ARGUMENTS_OPC -> Ɛ
+     ! LOGIC_AND -> EQUALITY LOGIC_AND_2
+     ! LOGIC_AND_2 -> and EQUALITY LOGIC_AND_2
+     ! LOGIC_AND_2 -> Ɛ
      *
-     * ! ARGUMENTS -> , EXPRESSION ARGUMENTS
-     * ! ARGUMENTS -> Ɛ
+     ! EQUALITY -> COMPARISON EQUALITY_2
+     ! EQUALITY_2 -> != COMPARISON EQUALITY_2
+     ! EQUALITY_2 -> == COMPARISON EQUALITY_2
+     ! EQUALITY_2 -> Ɛ
+     *
+     ! COMPARISON -> TERM COMPARISON_2
+     ! COMPARISON_2 -> > TERM COMPARISON_2
+     ! COMPARISON_2 -> < TERM COMPARISON_2
+     ! COMPARISON_2 -> >= TERM COMPARISON_2
+     ! COMPARISON_2 -> <= TERM COMPARISON_2
+     ! COMPARISON_2 -> Ɛ
+     *
+     ! TERM -> FACTOR TERM_2
+     ! TERM_2 -> + FACTOR TERM_2
+     ! TERM_2 -> - FACTOR TERM_2
+     ! TERM_2 -> Ɛ
+     *
+     ! FACTOR -> UNARY FACTOR_2
+     ! FACTOR_2 -> * UNARY FACTOR_2
+     ! FACTOR_2 -> / UNARY FACTOR_2
+     ! FACTOR_2 -> Ɛ
+     *
+     ! UNARY -> ! UNARY
+     ! UNARY -> - UNARY
+     ! UNARY -> CALL
+     *
+     ! CALL -> PRIMARY CALL_2
+     ! CALL_2 -> ( ARGUMENTS_OPC ) CALL_2
+     ! CALL_2 -> Ɛ
+     *
+     ? PRIMARY -> ( EXPRESSION )
+     ? PRIMARY -> NUMBER
+     ? PRIMARY -> STRING
+     ? PRIMARY -> TRUE
+     ? PRIMARY -> FALSE
+     ? PRIMARY -> IDENTIFIER
+     ? PRIMARY -> NULL
+     *
+     * -----
+     *
+     ! FUNCTION -> id ( PARAMETERS_OPC ) BLOCK
+     ! FUNCTIONS -> FUN_DECLARATION FUNCTIONS
+     ! FUNCTIONS -> Ɛ
+     *
+     ! PARAMETERS_OPC -> PARAMETERS
+     ! PARAMETERS_OPC -> Ɛ
+     *
+     ! PARAMETERS -> id PARAMETERS_2
+     ! PARAMETERS_2 -> , id PARAMETERS_2
+     ! PARAMETERS_2 -> Ɛ
+     *
+     ! ARGUMENTS_OPC -> EXPRESSION ARGUMENTS
+     ! ARGUMENTS_OPC -> Ɛ
+     *
+     ! ARGUMENTS -> , EXPRESSION ARGUMENTS
+     ! ARGUMENTS -> Ɛ
      */
 
     // ! PROGRAM
