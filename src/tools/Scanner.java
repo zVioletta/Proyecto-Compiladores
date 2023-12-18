@@ -10,7 +10,6 @@ public class Scanner {
     private int pActual;
     private final List<Token> tokens = new ArrayList<>();
 
-
     private static final Map<String, TipoToken> palabrasReservadas;
     static {
         palabrasReservadas = new HashMap<>();
@@ -46,7 +45,7 @@ public class Scanner {
         palabrasReservadas.put("or", TipoToken.OR);
     }
 
-    Scanner(String source){
+    Scanner(String source) {
         this.source = source + " ";
         this.pActual = 0;
     }
@@ -68,19 +67,19 @@ public class Scanner {
             } else if (cActual == '"') {
                 // Escanear cadena entre comillas
                 String cadena = escanearCadena();
-                tokens.add(new Token(TipoToken.STRING, cadena, cadena ,pActual));
-            } else if(cActual == '/'){
-                if(source.charAt(pActual+1)=='*'){
+                tokens.add(new Token(TipoToken.STRING, cadena, cadena, pActual));
+            } else if (cActual == '/') {
+                if (source.charAt(pActual + 1) == '*') {
                     pActual++;
-                    while(true){
+                    while (true) {
                         pActual++;
-                        //System.out.println(source.charAt(pActual));
-                        if(source.charAt(pActual)=='*'&&source.charAt(pActual+1)=='/'){
-                            if(source.charAt(pActual+2)=='\0'){
+                        // System.out.println(source.charAt(pActual));
+                        if (source.charAt(pActual) == '*' && source.charAt(pActual + 1) == '/') {
+                            if (source.charAt(pActual + 2) == '\0') {
                                 pActual++;
                                 break;
-                            }else{
-                                pActual=pActual+2;
+                            } else {
+                                pActual = pActual + 2;
                                 break;
                             }
                         }
@@ -92,10 +91,9 @@ public class Scanner {
                 pActual++;
             }
         }
-        tokens.add(new Token(TipoToken.EOF, "",null,pActual));
+        tokens.add(new Token(TipoToken.EOF, "", null, pActual));
         return tokens;
     }
-
 
     private boolean esCaracterIgnorable(char c) {
         return c == ' ' || c == '\t' || c == '\n';
@@ -119,6 +117,7 @@ public class Scanner {
         }
         return source.substring(inicio, pActual);
     }
+
     private String escanearCadena() {
         int inicio = pActual + 1; // Ignorar el primer "
         pActual++; // Avanzar a la siguiente posición
@@ -136,16 +135,15 @@ public class Scanner {
     private Token crearToken(String lexema) {
         if (palabrasReservadas.containsKey(lexema)) {
             TipoToken tipo = palabrasReservadas.get(lexema);
-            return new Token(tipo, lexema,null,pActual);
+            return new Token(tipo, lexema, null, pActual);
         } else if (isNumeric(lexema)) {
-            return new Token(TipoToken.NUMBER, lexema,Double.valueOf(lexema), pActual);
+            return new Token(TipoToken.NUMBER, lexema, Double.valueOf(lexema), pActual);
         } else if (lexema.equals("fun")) {
-            return new Token(TipoToken.FUN, lexema,null, pActual);
+            return new Token(TipoToken.FUN, lexema, null, pActual);
         } else {
-            return new Token(TipoToken.IDENTIFIER, lexema,null, pActual);
+            return new Token(TipoToken.IDENTIFIER, lexema, null, pActual);
         }
     }
-
 
     public static boolean isNumeric(String str) {
         try {
@@ -164,11 +162,13 @@ public class Scanner {
 
         return false;
     }
+
     private String escanearNumero() {
         int inicio = pActual;
         boolean hayPunto = false;
 
-        while (pActual < source.length() && (Character.isDigit(source.charAt(pActual)) || source.charAt(pActual) == '.')) {
+        while (pActual < source.length()
+                && (Character.isDigit(source.charAt(pActual)) || source.charAt(pActual) == '.')) {
             if (source.charAt(pActual) == '.') {
                 if (hayPunto) {
                     // Ya hay un punto en el número, lo tratamos como una palabra

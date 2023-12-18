@@ -13,27 +13,28 @@ public class Token {
         this.posicion = posicion;
     }
 
-     /* public Token(TipoToken tipo, String lexema) {
-        this.tipo = tipo;
-        this.lexema = lexema;
-        this.literal = null;
-    } */
+    /*
+     * public Token(TipoToken tipo, String lexema) {
+     * this.tipo = tipo;
+     * this.lexema = lexema;
+     * this.literal = null;
+     * }
+     */
 
     public boolean equals(Object o) {
         if (!(o instanceof Token)) {
             return false;
         }
 
-        if(this.tipo == ((Token)o).tipo){
+        if (this.tipo == ((Token) o).tipo) {
             return true;
         }
 
         return false;
     }
 
-
-    public boolean esOperando(){
-        switch (this.tipo){
+    public boolean esOperando() {
+        switch (this.tipo) {
             case IDENTIFIER:
             case NUMBER:
             case STRING:
@@ -43,8 +44,8 @@ public class Token {
         }
     }
 
-    public boolean esOperador(){
-        switch (this.tipo){
+    public boolean esOperador() {
+        switch (this.tipo) {
             case PLUS:
             case MINUS:
             case STAR:
@@ -63,8 +64,8 @@ public class Token {
         }
     }
 
-    public boolean esPalabraReservada(){
-        switch (this.tipo){
+    public boolean esPalabraReservada() {
+        switch (this.tipo) {
             case VAR:
             case IF:
             case PRINT:
@@ -81,8 +82,8 @@ public class Token {
         }
     }
 
-    public boolean esEstructuraDeControl(){
-        switch (this.tipo){
+    public boolean esEstructuraDeControl() {
+        switch (this.tipo) {
             case IF:
             case ELSE:
             case WHILE:
@@ -93,12 +94,12 @@ public class Token {
         }
     }
 
-    public boolean precedenciaMayorIgual(Token t){
+    public boolean precedenciaMayorIgual(Token t) {
         return this.obtenerPrecedencia() >= t.obtenerPrecedencia();
     }
 
-    private int obtenerPrecedencia(){
-        switch (this.tipo){
+    private int obtenerPrecedencia() {
+        switch (this.tipo) {
             case STAR:
             case SLASH:
                 return 7;
@@ -123,7 +124,7 @@ public class Token {
         return 0;
     }
 
-    public int aridad(){
+    public int aridad() {
         switch (this.tipo) {
             case STAR:
             case SLASH:

@@ -55,7 +55,7 @@ public class Arbol {
                     Nodo izquierdo01 = n.getHijos().get(0);
                     switch (izquierdo01.getValue().tipo) {
                         case PLUS:
-                            //System.out.println("Ayudaporfavor");
+                            // System.out.println("Ayudaporfavor");
                             SolverAritmetico solver = new SolverAritmetico(izquierdo01);
                             Object resultado = solver.resolver(ts);
                             System.out.println(resultado);
