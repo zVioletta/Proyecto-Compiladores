@@ -36,9 +36,7 @@ public class Nodo {
             hijos = new ArrayList<>();
         }
 
-        for(Nodo n : nodosHijos){
-            hijos.add(n);
-        }
+        hijos.addAll(nodosHijos);
     }
 
     public Token getValue(){

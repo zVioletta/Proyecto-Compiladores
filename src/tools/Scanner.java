@@ -8,22 +8,21 @@ import java.util.Map;
 public class Scanner {
 
     private static final Map<String, TipoToken> palabrasReservadas;
-
     static {
         palabrasReservadas = new HashMap<>();
-        palabrasReservadas.put("and",    TipoToken.AND);
-        palabrasReservadas.put("else",   TipoToken.ELSE);
+        palabrasReservadas.put("and",    TipoToken.AND); //
+        palabrasReservadas.put("else",   TipoToken.ELSE); //
         palabrasReservadas.put("false",  TipoToken.FALSE);
-        palabrasReservadas.put("for",    TipoToken.FOR);
-        palabrasReservadas.put("fun",    TipoToken.FUN);
-        palabrasReservadas.put("if",     TipoToken.IF);
+        palabrasReservadas.put("for",    TipoToken.FOR); //
+        palabrasReservadas.put("fun",    TipoToken.FUN); //
+        palabrasReservadas.put("if",     TipoToken.IF); //
         palabrasReservadas.put("null",   TipoToken.NULL);
-        palabrasReservadas.put("or",     TipoToken.OR);
-        palabrasReservadas.put("print",  TipoToken.PRINT);
-        palabrasReservadas.put("return", TipoToken.RETURN);
+        palabrasReservadas.put("or",     TipoToken.OR); //
+        palabrasReservadas.put("print",  TipoToken.PRINT); //
+        palabrasReservadas.put("return", TipoToken.RETURN); //
         palabrasReservadas.put("true",   TipoToken.TRUE);
-        palabrasReservadas.put("var",    TipoToken.VAR);
-        palabrasReservadas.put("while",  TipoToken.WHILE);
+        palabrasReservadas.put("var",    TipoToken.VAR); //
+        palabrasReservadas.put("while",  TipoToken.WHILE); //
     }
 
     private final String source;

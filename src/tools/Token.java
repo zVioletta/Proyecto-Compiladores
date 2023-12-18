@@ -6,17 +6,16 @@ public class Token {
     final int posicion;
     final Object literal;
 
-     /* public Token(TipoToken tipo, String lexema) {
+
+     public Token(TipoToken tipo, String lexema) {
         this.tipo = tipo;
         this.lexema = lexema;
         this.literal = null;
     }
 
-    public Token(TipoToken tipo, String lexema, Object literal) {
-        this.tipo = tipo;
-        this.lexema = lexema;
-        this.literal = literal;
-    } */
+    public Token(TipoToken tipoToken, String lexema, Object literal) {
+        this(tipoToken, lexema);
+    }
 
     public Token(TipoToken tipo, String lexema, Object literal, int posicion) {
         this.tipo = tipo;
