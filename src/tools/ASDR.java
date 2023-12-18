@@ -6,7 +6,6 @@ public class ASDR implements Parser {
     private int i = 0;
     private Token preAn;
     private List<Token> tokens;
-    private String message = "Error on: " + (this.i + 1) + ". Expecting:" + this.tokens.get(this.i);
 
     public ASDR(List<Token> tokens) {
         this.tokens = tokens;
@@ -14,7 +13,7 @@ public class ASDR implements Parser {
     }
 
     public void error() {
-        System.out.println(message);
+        System.out.println("Error on: " + (this.i + 1) + ". Expecting:" + this.tokens.get(this.i));
     }
 
     public void match(TipoToken tt) {

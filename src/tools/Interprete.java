@@ -51,7 +51,7 @@ public class Interprete {
 
             Parser parser = new ASDR(tokens);
             parser.parse();
-            for(Token token : tokens){
+            for(Token token : tokens) {
                 System.out.println(token);
             }
         }
