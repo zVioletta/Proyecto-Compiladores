@@ -11,14 +11,14 @@ import java.util.List;
 public class Interprete {
 
     static boolean existenErrores = false;
-
+    static TablaSimbolos ts = new TablaSimbolos();
     public static void main(String[] args) throws IOException {
-        if(args.length > 1) {
+        if(args.length>1){
             System.out.println("Uso correcto: interprete [archivo.txt]");
             System.exit(64);
-        } else if(args.length == 1){
+        } else if (args.length == 1){
             ejecutarArchivo(args[0]);
-        } else{
+        } else {
             ejecutarPrompt();
         }
     }
@@ -32,46 +32,43 @@ public class Interprete {
     private static void ejecutarPrompt() throws IOException {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
+        String conjunto="";
 
-        for(;;){
+        while (true) {
             System.out.print(">>> ");
             String linea = reader.readLine();
-            if(linea == null) break;
+            if (linea == null || linea.equals("salir")) break; // Ctrl + D
             ejecutar(linea);
             existenErrores = false;
         }
     }
 
     private static void ejecutar(String source) {
-        try{
-            Scanner scanner = new Scanner(source);
-            List<Token> tokens = scanner.scan();
+        Scanner scanner = new Scanner(source);
+        List<Token> tokens = scanner.scanTokens();
 
-            // Imprime cada token generado
+//        for(Token token : tokens){
+//            System.out.println(token);
+//        }
 
-            Parser parser = new ASDR(tokens);
+        try {
+            Parser parser = new Parser(tokens);
             parser.parse();
-            for(Token token : tokens) {
-                System.out.println(token);
+            if(parser.esValida){
+                System.out.print("\n------->Cadena valida\n\n");
             }
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
+        } catch(RuntimeException e) {
+            System.out.println(e.getMessage() );
         }
     }
 
-    /*
-    El método error se puede usar desde las distintas clases
-    para reportar los errores:
-    tools.Interprete.error(....);
-     */
-    static void error(int linea, String mensaje){
+    static void error(int linea, String mensaje) {
         reportar(linea, "", mensaje);
     }
 
-    private static void reportar(int linea, String posicion, String mensaje){
+    private static void reportar(int linea, String donde, String mensaje) {
         System.err.println(
-                "[linea " + linea + "] Error " + posicion + ": " + mensaje
+                "[linea " + linea + "] Error " + donde + ": " + mensaje
         );
         existenErrores = true;
     }
