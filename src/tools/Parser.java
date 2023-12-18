@@ -3,14 +3,12 @@ package tools;
 import java.util.List;
 
 public class Parser {
-    private int i = 0;
-    private Token preAn;
+    private int cPos = 0;
     private List<Token> tokens;
     public boolean esValida = true;
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
-        this.preAn = this.tokens.get(i);
     }
 
     public void parse() {
@@ -148,9 +146,9 @@ public class Parser {
 
     // ! DECLARATION
     private void Declaration() {
-        if (this.preAn.tipo.equals(TipoToken.FUN)) {
+        if (comparar(TipoToken.FUN)) {
             FunDeclaration();
-        } else if (this.preAn.tipo.equals(TipoToken.VAR)) {
+        } else if (comparar(TipoToken.VAR)) {
             VarDeclaration();
         } else {
             Statement();
@@ -174,7 +172,7 @@ public class Parser {
 
     // ! VAR_INIT
     private void VarInit() {
-        if (this.preAn.tipo.equals(TipoToken.EQUAL)) {
+        if (comparar(TipoToken.EQUAL)) {
             match(TipoToken.EQUAL);
             Expression();
         }
@@ -182,17 +180,17 @@ public class Parser {
 
     // ! STATEMENT
     private void Statement() {
-        if (this.preAn.tipo.equals(TipoToken.LEFT_PAREN) || this.preAn.tipo.equals(TipoToken.IDENTIFIER)) {
+        if (comparar(TipoToken.LEFT_PAREN) || comparar(TipoToken.IDENTIFIER)) {
             ExprStmt();
-        } else if (this.preAn.tipo.equals(TipoToken.FOR)) {
+        } else if (comparar(TipoToken.FOR)) {
             ForStmt();
-        } else if (this.preAn.tipo.equals(TipoToken.IF)) {
+        } else if (comparar(TipoToken.IF)) {
             IfStmt();
-        } else if (this.preAn.tipo.equals(TipoToken.WHILE)) {
+        } else if (comparar(TipoToken.WHILE)) {
             WhileStmt();
-        } else if (this.preAn.tipo.equals(TipoToken.RETURN)) {
+        } else if (comparar(TipoToken.RETURN)) {
             ReturnStmt();
-        } else if (this.preAn.tipo.equals(TipoToken.LEFT_BRACE)) {
+        } else if (comparar(TipoToken.LEFT_BRACE)) {
             Block();
         } else {
             error();
@@ -220,9 +218,9 @@ public class Parser {
 
     // ! FOR_STMT_1
     private void ForStmt1() {
-        if (this.preAn.tipo.equals(TipoToken.VAR)) {
+        if (comparar(TipoToken.VAR)) {
             VarDeclaration();
-        } else if (this.preAn.tipo.equals(TipoToken.SEMICOLON)) {
+        } else if (comparar(TipoToken.SEMICOLON)) {
             match(TipoToken.SEMICOLON);
         } else {
             ExprStmt();
@@ -231,7 +229,7 @@ public class Parser {
 
     // ! FOR_STMT_2
     private void ForStmt2() {
-        if (!this.preAn.tipo.equals(TipoToken.SEMICOLON)) {
+        if (!comparar(TipoToken.SEMICOLON)) {
             Expression();
         }
         match(TipoToken.SEMICOLON);
@@ -239,7 +237,7 @@ public class Parser {
 
     // ! FOR_STMT_3
     private void ForStmt3() {
-        if (!this.preAn.tipo.equals(TipoToken.RIGHT_PAREN)) {
+        if (!comparar(TipoToken.RIGHT_PAREN)) {
             Expression();
         }
     }
@@ -256,7 +254,7 @@ public class Parser {
 
     // ! ELSE_STMT
     private void ElseStmt() {
-        if (this.preAn.tipo.equals(TipoToken.ELSE)) {
+        if (comparar(TipoToken.ELSE)) {
             match(TipoToken.ELSE);
             Statement();
         }
@@ -306,7 +304,7 @@ public class Parser {
 
     // ! ASSIGNMENTOPC
     private void AssignmentOpc() {
-        if (this.preAn.tipo.equals(TipoToken.EQUAL)) {
+        if (comparar(TipoToken.EQUAL)) {
             match(TipoToken.EQUAL);
             Assignment();
         }
@@ -320,7 +318,7 @@ public class Parser {
 
     // ! LOGIC_OR_2
     private void LogicOr2() {
-        if (this.preAn.tipo.equals(TipoToken.OR)) {
+        if (comparar(TipoToken.OR)) {
             match(TipoToken.OR);
             LogicAnd();
             LogicOr2();
@@ -335,7 +333,7 @@ public class Parser {
 
     // ! LOGIC_AND_2
     private void LogicAnd2() {
-        if (this.preAn.tipo.equals(TipoToken.AND)) {
+        if (comparar(TipoToken.AND)) {
             match(TipoToken.AND);
             Equality();
             LogicAnd2();
@@ -350,11 +348,11 @@ public class Parser {
 
     // ! EQUALITY_2
     private void Equality2() {
-        if (this.preAn.tipo.equals(TipoToken.BANG_EQUAL)) {
+        if (comparar(TipoToken.BANG_EQUAL)) {
             match(TipoToken.BANG_EQUAL);
             Comparison();
             Equality2();
-        } else if (this.preAn.tipo.equals(TipoToken.EQUAL_EQUAL)) {
+        } else if (comparar(TipoToken.EQUAL_EQUAL)) {
             match(TipoToken.EQUAL_EQUAL);
             Comparison();
             Equality2();
@@ -369,19 +367,19 @@ public class Parser {
 
     // ! COMPARISON_2
     private void Comparison2() {
-        if (this.preAn.tipo.equals(TipoToken.GREATER)) {
+        if (comparar(TipoToken.GREATER)) {
             match(TipoToken.GREATER);
             Term();
             Comparison2();
-        } else if (this.preAn.tipo.equals(TipoToken.GREATER_EQUAL)) {
+        } else if (comparar(TipoToken.GREATER_EQUAL)) {
             match(TipoToken.GREATER_EQUAL);
             Term();
             Comparison2();
-        } else if (this.preAn.tipo.equals(TipoToken.LESS)) {
+        } else if (comparar(TipoToken.LESS)) {
             match(TipoToken.LESS);
             Term();
             Comparison2();
-        } else if (this.preAn.tipo.equals(TipoToken.LESS_EQUAL)) {
+        } else if (comparar(TipoToken.LESS_EQUAL)) {
             match(TipoToken.LESS_EQUAL);
             Term();
             Comparison2();
@@ -396,11 +394,11 @@ public class Parser {
 
     // ! TERM_2
     private void Term2() {
-        if (this.preAn.tipo.equals(TipoToken.MINUS)) {
+        if (comparar(TipoToken.MINUS)) {
             match(TipoToken.MINUS);
             Factor();
             Term2();
-        } else if (this.preAn.tipo.equals(TipoToken.PLUS)) {
+        } else if (comparar(TipoToken.PLUS)) {
             match(TipoToken.PLUS);
             Factor();
             Term2();
@@ -415,11 +413,11 @@ public class Parser {
 
     // ! FACTOR_2
     private void Factor2() {
-        if (this.preAn.tipo.equals(TipoToken.SLASH)) {
+        if (comparar(TipoToken.SLASH)) {
             match(TipoToken.SLASH);
             Unary();
             Factor2();
-        } else if (this.preAn.tipo.equals(TipoToken.STAR)) {
+        } else if (comparar(TipoToken.STAR)) {
             match(TipoToken.STAR);
             Unary();
             Factor2();
@@ -428,18 +426,14 @@ public class Parser {
 
     // ! UNARY
     private void Unary() {
-        switch (this.preAn.tipo) {
-            case BANG:
-                match(TipoToken.BANG);
-                Unary();
-                break;
-            case MINUS:
-                match(TipoToken.MINUS);
-                Unary();
-                break;
-            default:
-                Call();
-                break;
+        if (comparar(TipoToken.BANG)) {
+            match(TipoToken.BANG);
+            Unary();
+        } else if (comparar(TipoToken.MINUS)) {
+            match(TipoToken.MINUS);
+            Unary();
+        } else {
+            Call();
         }
     }
 
@@ -451,10 +445,10 @@ public class Parser {
 
     // ! CALL_2
     private void Call2() {
-        if (this.preAn.tipo.equals(TipoToken.LEFT_PAREN)) {
+        if (comparar(TipoToken.LEFT_PAREN)) {
             match(TipoToken.LEFT_PAREN);
             ArgumentsOpc();
-            if (this.preAn.tipo.equals(TipoToken.RIGHT_PAREN))
+            if (comparar(TipoToken.RIGHT_PAREN))
                 match(TipoToken.RIGHT_PAREN);
             else
                 error();
@@ -464,22 +458,22 @@ public class Parser {
 
     // ! PRIMARY
     private void Primary() {
-        if (this.preAn.tipo.equals(TipoToken.IDENTIFIER)) {
+        if (comparar(TipoToken.IDENTIFIER)) {
             match(TipoToken.IDENTIFIER);
-        } else if (this.preAn.tipo.equals(TipoToken.NUMBER)) {
+        } else if (comparar(TipoToken.NUMBER)) {
             match(TipoToken.NUMBER);
-        } else if (this.preAn.tipo.equals(TipoToken.STRING)) {
+        } else if (comparar(TipoToken.STRING)) {
             match(TipoToken.STRING);
-        } else if (this.preAn.tipo.equals(TipoToken.TRUE)) {
+        } else if (comparar(TipoToken.TRUE)) {
             match(TipoToken.TRUE);
-        } else if (this.preAn.tipo.equals(TipoToken.FALSE)) {
+        } else if (comparar(TipoToken.FALSE)) {
             match(TipoToken.FALSE);
-        } else if (this.preAn.tipo.equals(TipoToken.NULL)) {
+        } else if (comparar(TipoToken.NULL)) {
             match(TipoToken.NULL);
-        } else if (this.preAn.tipo.equals(TipoToken.LEFT_PAREN)) {
+        } else if (comparar(TipoToken.LEFT_PAREN)) {
             match(TipoToken.LEFT_PAREN);
             Expression();
-            if (this.preAn.tipo.equals(TipoToken.RIGHT_PAREN))
+            if (comparar(TipoToken.RIGHT_PAREN))
                 match(TipoToken.RIGHT_PAREN);
             else
                 error();
@@ -497,7 +491,7 @@ public class Parser {
 
     // ! FUNCTIONS
     private void Functions() {
-        if (this.preAn.tipo.equals(TipoToken.IDENTIFIER)) {
+        if (comparar(TipoToken.IDENTIFIER)) {
             match(TipoToken.IDENTIFIER);
             Function();
             Functions();
@@ -512,7 +506,7 @@ public class Parser {
 
     // ! PARAMETERSOPc
     private void ParametersOpc() {
-        if (this.preAn.tipo == TipoToken.COMMA) {
+        if (comparar(TipoToken.COMMA)) {
             match(TipoToken.COMMA);
             match(TipoToken.IDENTIFIER);
             ParametersOpc();
@@ -527,25 +521,32 @@ public class Parser {
 
     // ! ARGUMENTS
     private void Arguments() {
-        if (this.preAn.tipo == TipoToken.COMMA) {
+        if (comparar(TipoToken.COMMA)) {
             match(TipoToken.COMMA);
             Expression();
             Arguments();
         }
     }
 
-
     public void match(TipoToken tipoToken) {
-        Token token = tokens.get(this.i);
+        Token token = tokens.get(this.cPos);
         if (token.tipo == tipoToken) {
-            this.i++;
+            cPos++;
         } else {
             esValida=false;
-            System.out.println("Error: Se esperaba " + tipoToken + " pero se encontró " + token.tipo + " en la posición " + this.i);
+            System.out.println("Error: Se esperaba " + tipoToken + " pero se encontró " + token.tipo + " en la posición " + cPos);
         }
     }
 
+    private boolean comparar(TipoToken tipoToken) {
+        if (cPos >= tokens.size()) {
+            return false;
+        }
+        Token token = tokens.get(cPos);
+        return token.tipo == tipoToken;
+    }
+
     public void error() {
-        System.out.println("Error on: " + (this.i + 1) + ". Expecting:" + this.tokens.get(this.i));
+        System.out.println("Error on: " + (this.cPos + 1) + ". Expecting:" + this.tokens.get(this.cPos));
     }
 }
