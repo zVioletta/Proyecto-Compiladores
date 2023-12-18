@@ -1,6 +1,5 @@
 package tools;
 
-import java.awt.*;
 import java.util.List;
 
 public class ASDR implements Parser {
