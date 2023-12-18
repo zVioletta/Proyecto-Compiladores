@@ -1,4 +1,3 @@
-// Prueba 8:
 var init = 1;
 var lim = 10;
 var fib = 0;

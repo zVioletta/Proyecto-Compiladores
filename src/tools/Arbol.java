@@ -155,10 +155,10 @@ public class Arbol {
                     }
                     break;
                 case WHILE:
-                    System.out.println("While no implementado");
+                    System.out.println("TBI");
                     break;
                 case FOR:
-                    System.out.println("For no implementado");
+                    System.out.println("TBI");
                     break;
                 default:
                     break;
