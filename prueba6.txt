@@ -1,5 +1,3 @@
-// Prueba 6:
-
 /*
 Código para calcula la serie de Fibonacci
 */
