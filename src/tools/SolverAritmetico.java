@@ -22,7 +22,6 @@ public class SolverAritmetico {
             }
         }
 
-        //System.out.println(n.getValue().lexema + "rrrrr");
         Nodo izq = n.getHijos().get(0);
         Nodo der = n.getHijos().get(1);
 
