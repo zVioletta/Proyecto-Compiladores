@@ -69,6 +69,16 @@ public class Scanner {
                 String cadena = escanearCadena();
                 tokens.add(new Token(TipoToken.STRING, cadena, cadena, pActual));
             } else if (cActual == '/') {
+                if (source.charAt(pActual + 1) == '/') {
+                    pActual++;
+                    while (source.charAt(pActual) != '\n') {
+                        pActual++;
+                        if (source.charAt(pActual) == '\0') {
+                            pActual++;
+                            break;
+                        }
+                    }
+                }
                 if (source.charAt(pActual + 1) == '*') {
                     pActual++;
                     while (true) {
