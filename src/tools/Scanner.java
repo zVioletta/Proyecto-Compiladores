@@ -79,7 +79,7 @@ public class Scanner {
                         }
                     }
                 }
-                if (source.charAt(pActual + 1) == '*') {
+                else if (source.charAt(pActual + 1) == '*') {
                     pActual++;
                     while (true) {
                         pActual++;
