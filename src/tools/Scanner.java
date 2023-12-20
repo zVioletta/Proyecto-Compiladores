@@ -74,7 +74,7 @@ public class Scanner {
                     while (source.charAt(pActual) != '\n') {
                         pActual++;
                         if (source.charAt(pActual) == '\0') {
-                            pActual = pActual + 2;
+                            pActual++;
                             break;
                         }
                     }
