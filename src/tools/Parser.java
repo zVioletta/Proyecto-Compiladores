@@ -6,6 +6,7 @@ public class Parser {
     private int cPos = 0;
     private final List<Token> tokens;
     public boolean esValida = true;
+    private Token preanalisis;
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
@@ -551,5 +552,9 @@ public class Parser {
 
     public void error() {
         System.out.println("Error on: " + (this.cPos + 1) + ". Expecting:" + this.tokens.get(this.cPos));
+    }
+
+    private Token previous() {
+        return this.tokens.get(cPos - 1);
     }
 }
