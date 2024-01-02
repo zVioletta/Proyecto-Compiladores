@@ -44,9 +44,9 @@ public class Interprete {
         }
     }
 
-    private static void ejecutar(String source) {
+    private static void ejecutar(String source) throws Exception {
         Scanner scanner = new Scanner(source);
-        List<Token> tokens = scanner.scanTokens();
+        List<Token> tokens = scanner.scan();
 
 //        for(Token token : tokens){
 //        System.out.println(token);
@@ -56,15 +56,7 @@ public class Interprete {
             Parser parser = new Parser(tokens);
             parser.parse();
             if (parser.esValida) {
-//                System.out.print("\n>>>Cadena valida<<<\n\n");
-                GeneradorPostfija gpf = new GeneradorPostfija(tokens);
-                List<Token> postfija = gpf.convertir();
-                for(Token token : postfija){
-                    System.out.println(token);
-                }
-                GeneradorAST gast = new GeneradorAST(postfija);
-                Arbol programa = gast.generarAST();
-                programa.recorrer(ts);
+                System.out.print("\n>>>Cadena valida<<<\n\n");
             }
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());

@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Parser {
     private int cPos = 0;
-    private List<Token> tokens;
+    private final List<Token> tokens;
     public boolean esValida = true;
 
     public Parser(List<Token> tokens) {
@@ -148,8 +148,10 @@ public class Parser {
     private void Declaration() {
         if (comparar(TipoToken.FUN)) {
             FunDeclaration();
+            Declaration();
         } else if (comparar(TipoToken.VAR)) {
             VarDeclaration();
+            Declaration();
         } else {
             Statement();
             Declaration();
