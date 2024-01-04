@@ -1,4 +1,7 @@
-package tools;
+package parser;
+
+import tools.TipoToken;
+import tools.Token;
 
 import java.util.List;
 
@@ -6,14 +9,13 @@ public class Parser {
     private int cPos = 0;
     private final List<Token> tokens;
     public boolean esValida = true;
-    private Token preanalisis;
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
     }
 
     public void parse() {
-        Program();
+        program();
     }
 
     // TODO Revisar GLC para poder realizar pruebas
@@ -141,393 +143,415 @@ public class Parser {
      */
 
     // ! PROGRAM
-    private void Program() {
-        Declaration();
+    private void program() {
+        declaration();
     }
 
     // ! DECLARATION
-    private void Declaration() {
+    private void declaration() {
         if (comparar(TipoToken.FUN)) {
-            FunDeclaration();
-            Declaration();
+            funDeclaration();
+            declaration();
         } else if (comparar(TipoToken.VAR)) {
-            VarDeclaration();
-            Declaration();
+            varDeclaration();
+            declaration();
         } else {
-            Statement();
-            Declaration();
+            statement();
+            declaration();
         }
     }
 
     // ! FUN_DECLARATION
-    private void FunDeclaration() {
+    private void funDeclaration() {
         match(TipoToken.FUN);
-        Function();
+        function();
     }
 
     // ! VAR_DECLARATION
-    private void VarDeclaration() {
+    private void varDeclaration() {
         match(TipoToken.VAR);
         match(TipoToken.IDENTIFIER);
-        VarInit();
+        varInit();
         match(TipoToken.SEMICOLON);
     }
 
     // ! VAR_INIT
-    private void VarInit() {
+    private void varInit() {
         if (comparar(TipoToken.EQUAL)) {
             match(TipoToken.EQUAL);
-            Expression();
+            expression();
         }
     }
 
     // ! STATEMENT
-    private void Statement() {
+    private void statement() {
         if (comparar(TipoToken.LEFT_PAREN) || comparar(TipoToken.IDENTIFIER)) {
-            ExprStmt();
+            exprStmt();
         } else if (comparar(TipoToken.FOR)) {
-            ForStmt();
+            forStmt();
         } else if (comparar(TipoToken.IF)) {
-            IfStmt();
+            ifStmt();
         } else if (comparar(TipoToken.WHILE)) {
-            WhileStmt();
+            whileStmt();
         } else if (comparar(TipoToken.RETURN)) {
-            ReturnStmt();
+            returnStmt();
         } else if (comparar(TipoToken.LEFT_BRACE)) {
-            Block();
+            block();
         } else {
             error();
         }
     }
 
     // ! EXPR_STMT
-    private void ExprStmt() {
-        Expression();
+    private void exprStmt() {
+        expression();
         match(TipoToken.SEMICOLON);
     }
 
     // ! FOR_STMT
-    private void ForStmt() {
+    private void forStmt() {
         match(TipoToken.FOR);
         match(TipoToken.LEFT_PAREN);
-        ForStmt1();
+        forStmt1();
         match(TipoToken.SEMICOLON);
-        ForStmt2();
+        forStmt2();
         match(TipoToken.SEMICOLON);
-        ForStmt3();
+        forStmt3();
         match(TipoToken.RIGHT_PAREN);
-        Statement();
+        statement();
     }
 
     // ! FOR_STMT_1
-    private void ForStmt1() {
+    private void forStmt1() {
         if (comparar(TipoToken.VAR)) {
-            VarDeclaration();
+            varDeclaration();
         } else if (comparar(TipoToken.SEMICOLON)) {
             match(TipoToken.SEMICOLON);
         } else {
-            ExprStmt();
+            exprStmt();
         }
     }
 
     // ! FOR_STMT_2
-    private void ForStmt2() {
+    private void forStmt2() {
         if (!comparar(TipoToken.SEMICOLON)) {
-            Expression();
+            expression();
         }
         match(TipoToken.SEMICOLON);
     }
 
     // ! FOR_STMT_3
-    private void ForStmt3() {
+    private void forStmt3() {
         if (!comparar(TipoToken.RIGHT_PAREN)) {
-            Expression();
+            expression();
         }
     }
 
     // ! IF_STMT
-    private void IfStmt() {
+    private void ifStmt() {
         match(TipoToken.IF);
         match(TipoToken.LEFT_PAREN);
-        Expression();
+        expression();
         match(TipoToken.RIGHT_PAREN);
-        Statement();
-        ElseStmt();
+        statement();
+        elseStmt();
     }
 
     // ! ELSE_STMT
-    private void ElseStmt() {
+    private void elseStmt() {
         if (comparar(TipoToken.ELSE)) {
             match(TipoToken.ELSE);
-            Statement();
+            statement();
         }
     }
 
     // ! PRINT_STMT
-    private void PrintStmt() {
+    private void printStmt() {
         match(TipoToken.PRINT);
-        Expression();
+        expression();
         match(TipoToken.SEMICOLON);
     }
 
     // ! RETURN_STMT
-    private void ReturnStmt() {
+    private void returnStmt() {
         match(TipoToken.RETURN);
-        Expression();
+        expression();
         match(TipoToken.SEMICOLON);
     }
 
     // ! WHILE_STMT
-    private void WhileStmt() {
+    private void whileStmt() {
         match(TipoToken.WHILE);
         match(TipoToken.LEFT_PAREN);
-        Expression();
+        expression();
         match(TipoToken.RIGHT_PAREN);
-        Statement();
+        statement();
     }
 
     // ! BLOCK
-    private void Block() {
+    private void block() {
         match(TipoToken.LEFT_BRACE);
-        Declaration();
+        declaration();
         match(TipoToken.RIGHT_BRACE);
     }
 
     // ! EXPRESSION
-    private boolean Expression() {
-        Assignment();
-        return false;
+    private Expression expression() {
+        assignment();
+        return null;
     }
 
     // ! ASSIGNMENT
-    private void Assignment() {
-        LogicOr();
-        AssignmentOpc();
+    private Expression assignment() {
+
     }
 
     // ! ASSIGNMENTOPC
-    private void AssignmentOpc() {
+    private void assignmentOpc() {
         if (comparar(TipoToken.EQUAL)) {
             match(TipoToken.EQUAL);
-            Assignment();
+            assignment();
         }
     }
 
     // ! LOGIC_OR
-    private void LogicOr() {
-        LogicAnd();
-        LogicOr2();
+    private void logicOr() {
+        logicAnd();
+        logicOr2();
     }
 
     // ! LOGIC_OR_2
-    private void LogicOr2() {
+    private void logicOr2() {
         if (comparar(TipoToken.OR)) {
             match(TipoToken.OR);
-            LogicAnd();
-            LogicOr2();
+            logicAnd();
+            logicOr2();
         }
     }
 
     // ! LOGIC_AND
-    private void LogicAnd() {
-        Equality();
-        LogicAnd2();
+    private void logicAnd() {
+        equality();
+        logicAnd2();
     }
 
     // ! LOGIC_AND_2
-    private void LogicAnd2() {
+    private void logicAnd2() {
         if (comparar(TipoToken.AND)) {
             match(TipoToken.AND);
-            Equality();
-            LogicAnd2();
+            equality();
+            logicAnd2();
         }
     }
 
     // ! EQUALITY
-    private void Equality() {
-        Comparison();
-        Equality2();
+    private void equality() {
+        comparison();
+        equality2();
     }
 
     // ! EQUALITY_2
-    private void Equality2() {
+    private void equality2() {
         if (comparar(TipoToken.BANG_EQUAL)) {
             match(TipoToken.BANG_EQUAL);
-            Comparison();
-            Equality2();
+            comparison();
+            equality2();
         } else if (comparar(TipoToken.EQUAL_EQUAL)) {
             match(TipoToken.EQUAL_EQUAL);
-            Comparison();
-            Equality2();
+            comparison();
+            equality2();
         }
     }
 
     // ! COMPARISON
-    private void Comparison() {
-        Term();
-        Comparison2();
+    private void comparison() {
+        term();
+        comparison2();
     }
 
     // ! COMPARISON_2
-    private void Comparison2() {
+    private void comparison2() {
         if (comparar(TipoToken.GREATER)) {
             match(TipoToken.GREATER);
-            Term();
-            Comparison2();
+            term();
+            comparison2();
         } else if (comparar(TipoToken.GREATER_EQUAL)) {
             match(TipoToken.GREATER_EQUAL);
-            Term();
-            Comparison2();
+            term();
+            comparison2();
         } else if (comparar(TipoToken.LESS)) {
             match(TipoToken.LESS);
-            Term();
-            Comparison2();
+            term();
+            comparison2();
         } else if (comparar(TipoToken.LESS_EQUAL)) {
             match(TipoToken.LESS_EQUAL);
-            Term();
-            Comparison2();
+            term();
+            comparison2();
         }
     }
 
     // ! TERM
-    private void Term() {
-        Factor();
-        Term2();
+    private void term() {
+        factor();
+        term2();
     }
 
     // ! TERM_2
-    private void Term2() {
+    private void term2() {
         if (comparar(TipoToken.MINUS)) {
             match(TipoToken.MINUS);
-            Factor();
-            Term2();
+            factor();
+            term2();
         } else if (comparar(TipoToken.PLUS)) {
             match(TipoToken.PLUS);
-            Factor();
-            Term2();
+            factor();
+            term2();
         }
     }
 
     // ! FACTOR
-    private void Factor() {
-        Unary();
-        Factor2();
+    private Expression factor() {
+        Expression expr = unary();
+        expr = factor2(expr);
+        return expr;
     }
 
     // ! FACTOR_2
-    private void Factor2() {
+    private Expression factor2(Expression expr) {
+        Token operator;
+        Expression expr2;
+        ExprBinary expb;
         if (comparar(TipoToken.SLASH)) {
             match(TipoToken.SLASH);
-            Unary();
-            Factor2();
+            operator = previous();
+            expr2 = unary();
+            expb = new ExprBinary(expr, operator, expr2);
+            return factor2(expb);
         } else if (comparar(TipoToken.STAR)) {
             match(TipoToken.STAR);
-            Unary();
-            Factor2();
+            operator = previous();
+            expr2 = unary();
+            expb = new ExprBinary(expr, operator, expr2);
+            return factor2(expb);
         }
+        return expr;
     }
 
     // ! UNARY
-    private void Unary() {
+    private Expression unary() {
+        Token operator;
+        Expression expr;
         if (comparar(TipoToken.BANG)) {
             match(TipoToken.BANG);
-            Unary();
+            operator = previous();
+            expr = unary();
+            return new ExprUnary(operator, expr);
         } else if (comparar(TipoToken.MINUS)) {
             match(TipoToken.MINUS);
-            Unary();
+            operator = previous();
+            expr = unary();
+            return new ExprUnary(operator, expr);
         } else {
-            Call();
+            return call();
         }
     }
 
     // ! CALL
-    private void Call() {
-        Primary();
-        Call2();
+    private Expression call() {
+        Expression expr = primary();
+        expr = call2(expr);
+        return expr;
     }
 
     // ! CALL_2
-    private void Call2() {
+    private Expression call2(Expression expr) {
         if (comparar(TipoToken.LEFT_PAREN)) {
             match(TipoToken.LEFT_PAREN);
-            ArgumentsOpc();
-            if (comparar(TipoToken.RIGHT_PAREN))
-                match(TipoToken.RIGHT_PAREN);
-            else
-                error();
-            Call2();
+            List<Expression> argumentList = argumentsOpc();
+            match (TipoToken.RIGHT_PAREN);
+            ExprCallFunction ecf = new ExprCallFunction(expr, argumentList);
+            call2(ecf);
         }
+        return expr;
     }
 
     // ! PRIMARY
-    private void Primary() {
+    private Expression primary() {
         if (comparar(TipoToken.IDENTIFIER)) {
             match(TipoToken.IDENTIFIER);
+            Token id = previous();
+            return new ExprVariable(id);
         } else if (comparar(TipoToken.NUMBER)) {
             match(TipoToken.NUMBER);
+            Token num = previous();
+            return new ExprLiteral(num);
         } else if (comparar(TipoToken.STRING)) {
             match(TipoToken.STRING);
+            Token str = previous();
+            return new ExprLiteral(str);
         } else if (comparar(TipoToken.TRUE)) {
             match(TipoToken.TRUE);
+            return new ExprLiteral(true);
         } else if (comparar(TipoToken.FALSE)) {
             match(TipoToken.FALSE);
+            return new ExprLiteral(false);
         } else if (comparar(TipoToken.NULL)) {
             match(TipoToken.NULL);
+            return new ExprLiteral(null);
         } else if (comparar(TipoToken.LEFT_PAREN)) {
             match(TipoToken.LEFT_PAREN);
-            Expression();
-            if (comparar(TipoToken.RIGHT_PAREN))
-                match(TipoToken.RIGHT_PAREN);
-            else
-                error();
+            Expression expr = expression();
+            match(TipoToken.RIGHT_PAREN);
+            return new ExprGrouping(expr);
         }
+        return null;
     }
 
     // ! FUNCTION
-    private void Function() {
+    private void function() {
         match(TipoToken.IDENTIFIER);
         match(TipoToken.LEFT_PAREN);
-        ArgumentsOpc();
+        argumentsOpc();
         match(TipoToken.RIGHT_PAREN);
-        Block();
+        block();
     }
 
     // ! FUNCTIONS
-    private void Functions() {
+    private void functions() {
         if (comparar(TipoToken.IDENTIFIER)) {
             match(TipoToken.IDENTIFIER);
-            Function();
-            Functions();
+            function();
+            functions();
         }
     }
 
     // ! PARAMETERS
     private void Parameters() {
         match(TipoToken.IDENTIFIER);
-        ParametersOpc();
+        parametersOpc();
     }
 
-    // ! PARAMETERSOPc
-    private void ParametersOpc() {
+    // ! PARAMETERSOPC
+    private void parametersOpc() {
         if (comparar(TipoToken.COMMA)) {
             match(TipoToken.COMMA);
             match(TipoToken.IDENTIFIER);
-            ParametersOpc();
+            parametersOpc();
         }
     }
 
     // ! ARGUMENTSOPC
-    private void ArgumentsOpc() {
-        Expression();
-        Arguments();
+    private void argumentsOpc() {
+        expression();
+        arguments();
     }
 
     // ! ARGUMENTS
-    private void Arguments() {
+    private void arguments() {
         if (comparar(TipoToken.COMMA)) {
             match(TipoToken.COMMA);
-            Expression();
-            Arguments();
+            expression();
+            arguments();
         }
     }
 
