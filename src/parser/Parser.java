@@ -3,6 +3,8 @@ package parser;
 import tools.TipoToken;
 import tools.Token;
 
+import javax.swing.plaf.nimbus.State;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -289,7 +291,7 @@ public class Parser {
     }
 
     // ! BLOCK
-    private void block() {
+    private Statement block(Statement stmt) {
         match(TipoToken.LEFT_BRACE);
         declaration();
         match(TipoToken.RIGHT_BRACE);
@@ -303,7 +305,9 @@ public class Parser {
 
     // ! ASSIGNMENT
     private Expression assignment() {
-
+        logicOr();
+        assignmentOpc();
+        return null;
     }
 
     // ! ASSIGNMENTOPC
@@ -508,12 +512,15 @@ public class Parser {
     }
 
     // ! FUNCTION
-    private void function() {
+    private Statement function() {
         match(TipoToken.IDENTIFIER);
+        Token id = previous();
         match(TipoToken.LEFT_PAREN);
-        argumentsOpc();
+        List<Token> parameters = parametersOpc();
         match(TipoToken.RIGHT_PAREN);
-        block();
+        List<Statement> state = new ArrayList<>();
+        StmtBlock block = block(state);
+        return new StmtFunction(id, parameters, block);
     }
 
     // ! FUNCTIONS
@@ -526,18 +533,31 @@ public class Parser {
     }
 
     // ! PARAMETERS
-    private void Parameters() {
+    private void parameters(List<Token> identifiers) {
         match(TipoToken.IDENTIFIER);
+        Token id = previous();
+        identifiers.add(id);
         parametersOpc();
     }
 
-    // ! PARAMETERSOPC
-    private void parametersOpc() {
+    // ! PARAMETERS_2
+    private void parameters2(List<Token> identifiers) {
         if (comparar(TipoToken.COMMA)) {
             match(TipoToken.COMMA);
             match(TipoToken.IDENTIFIER);
-            parametersOpc();
+            Token id = previous();
+            identifiers.add(id);
+            parameters(identifiers);
         }
+    }
+
+    // ! PARAMETERSOPC
+    private List<Token> parametersOpc() {
+        List<Token> identifiers = new ArrayList<>();
+        if (comparar(TipoToken.IDENTIFIER)) {
+            parameters(identifiers);
+        }
+        return identifiers;
     }
 
     // ! ARGUMENTSOPC

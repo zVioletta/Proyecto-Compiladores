@@ -3,7 +3,6 @@ package tools;
 import parser.Parser;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -14,7 +13,7 @@ public class Interprete {
     static boolean existenErrores = false;
     static TablaSimbolos ts = new TablaSimbolos();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         if (args.length > 1) {
             System.out.println("Uso correcto: interprete [archivo.txt]");
             System.exit(64);
@@ -25,13 +24,13 @@ public class Interprete {
         }
     }
 
-    private static void ejecutarArchivo(String path) throws IOException {
+    private static void ejecutarArchivo(String path) throws Exception {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         ejecutar(new String(bytes, Charset.defaultCharset()));
         if (existenErrores) System.exit(65);
     }
 
-    private static void ejecutarPrompt() throws IOException {
+    private static void ejecutarPrompt() throws Exception {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
         String conjunto = "";
