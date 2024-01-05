@@ -531,7 +531,7 @@ public class Parser {
     }
 
     // ! PRIMARY
-    private Expression primary() throws Exception {
+    private Expression primary() {
         if (comparar(TipoToken.IDENTIFIER)) {
             match(TipoToken.IDENTIFIER);
             Token id = previous();
@@ -559,7 +559,7 @@ public class Parser {
             match(TipoToken.RIGHT_PAREN);
             return new ExprGrouping(expr);
         }
-        throw new Exception("PRIMARY ERROR");
+        return null;
     }
 
     // ! FUNCTION
