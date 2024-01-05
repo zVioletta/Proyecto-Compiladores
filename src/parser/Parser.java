@@ -1,5 +1,6 @@
 package parser;
 
+import jdk.jshell.ExpressionSnippet;
 import tools.TipoToken;
 import tools.Token;
 
@@ -186,7 +187,7 @@ public class Parser {
     }
 
     // ! STATEMENT
-    private void statement() {
+    private Statement statement() {
         if (comparar(TipoToken.LEFT_PAREN) || comparar(TipoToken.IDENTIFIER)) {
             exprStmt();
         } else if (comparar(TipoToken.FOR)) {
@@ -211,7 +212,7 @@ public class Parser {
     }
 
     // ! FOR_STMT
-    private void forStmt() {
+    private Statement forStmt() {
         match(TipoToken.FOR);
         match(TipoToken.LEFT_PAREN);
         forStmt1();
@@ -293,124 +294,174 @@ public class Parser {
     // ! BLOCK
     private Statement block(Statement stmt) {
         match(TipoToken.LEFT_BRACE);
-        declaration();
+        while (!comparar(TipoToken.RIGHT_BRACE)) {
+            declaration();
+        }
         match(TipoToken.RIGHT_BRACE);
+        return stmt;
     }
 
     // ! EXPRESSION
     private Expression expression() {
-        assignment();
-        return null;
+        return assignment();
     }
 
     // ! ASSIGNMENT
     private Expression assignment() {
-        logicOr();
-        assignmentOpc();
-        return null;
+        Expression or = logicOr();
+        or = assignmentOpc(or);
+        return or;
     }
 
     // ! ASSIGNMENTOPC
-    private void assignmentOpc() {
+    private Expression assignmentOpc(Expression assign) {
         if (comparar(TipoToken.EQUAL)) {
+            Token equal = ((ExprVariable) assign).name;
             match(TipoToken.EQUAL);
-            assignment();
+            Expression value = expression();
+            return new ExprAssign(equal, value);
         }
+        return assign;
     }
 
     // ! LOGIC_OR
-    private void logicOr() {
-        logicAnd();
-        logicOr2();
+    private Expression logicOr() {
+        Expression and = logicAnd();
+        and = logicOr2(and);
+        return and;
     }
 
     // ! LOGIC_OR_2
-    private void logicOr2() {
+    private Expression logicOr2( Expression izq) {
+        Token operator;
+        Expression der;
+        Expression expb;
         if (comparar(TipoToken.OR)) {
             match(TipoToken.OR);
-            logicAnd();
-            logicOr2();
+            operator = previous();
+            der = logicAnd();
+            expb = new ExprLogical(izq, operator, der);
+            return logicOr2(expb);
         }
+        return izq;
     }
 
     // ! LOGIC_AND
-    private void logicAnd() {
-        equality();
-        logicAnd2();
+    private Expression logicAnd() {
+        Expression eq = equality();
+        eq = logicAnd2(eq);
+        return eq;
     }
 
     // ! LOGIC_AND_2
-    private void logicAnd2() {
+    private Expression logicAnd2(Expression izq) {
+        Token operator;
+        Expression der;
+        Expression expb;
         if (comparar(TipoToken.AND)) {
             match(TipoToken.AND);
-            equality();
-            logicAnd2();
+            operator = previous();
+            der = equality();
+            expb = new ExprLogical(izq, operator, der);
+            return logicAnd2(expb);
         }
+        return izq;
     }
 
     // ! EQUALITY
-    private void equality() {
-        comparison();
-        equality2();
+    private Expression equality() {
+        Expression comp = comparison();
+        comp = equality2(comp);
+        return comp;
     }
 
     // ! EQUALITY_2
-    private void equality2() {
+    private Expression equality2(Expression izq) {
+        Token operator;
+        Expression der;
+        Expression expb;
         if (comparar(TipoToken.BANG_EQUAL)) {
             match(TipoToken.BANG_EQUAL);
-            comparison();
-            equality2();
+            operator = previous();
+            der = comparison();
+            expb = new ExprBinary(izq, operator, der);
+            return equality2(expb);
         } else if (comparar(TipoToken.EQUAL_EQUAL)) {
             match(TipoToken.EQUAL_EQUAL);
-            comparison();
-            equality2();
+            operator = previous();
+            der = comparison();
+            expb = new ExprBinary(izq, operator, der);
+            return equality2(expb);
         }
+        return izq;
     }
 
     // ! COMPARISON
-    private void comparison() {
-        term();
-        comparison2();
+    private Expression comparison() {
+        Expression term = term();
+        term = comparison2(term);
+        return term;
     }
 
     // ! COMPARISON_2
-    private void comparison2() {
+    private Expression comparison2(Expression izq) {
+        Token operator;
+        Expression der;
+        Expression expb;
         if (comparar(TipoToken.GREATER)) {
             match(TipoToken.GREATER);
-            term();
-            comparison2();
+            operator = previous();
+            der = term();
+            expb = new ExprBinary(izq, operator, der);
+            return comparison2(expb);
         } else if (comparar(TipoToken.GREATER_EQUAL)) {
             match(TipoToken.GREATER_EQUAL);
-            term();
-            comparison2();
+            operator = previous();
+            der = term();
+            expb = new ExprBinary(izq, operator, der);
+            return comparison2(expb);
         } else if (comparar(TipoToken.LESS)) {
             match(TipoToken.LESS);
-            term();
-            comparison2();
+            operator = previous();
+            der = term();
+            expb = new ExprBinary(izq, operator, der);
+            return comparison2(expb);
         } else if (comparar(TipoToken.LESS_EQUAL)) {
             match(TipoToken.LESS_EQUAL);
-            term();
-            comparison2();
+            operator = previous();
+            der = term();
+            expb = new ExprBinary(izq, operator, der);
+            return comparison2(expb);
         }
+        return izq;
     }
 
     // ! TERM
-    private void term() {
-        factor();
-        term2();
+    private Expression term() {
+        Expression fact = factor();
+        fact = term2(fact);
+        return fact;
     }
 
     // ! TERM_2
-    private void term2() {
+    private Expression term2(Expression izq) {
+        Token operator;
+        Expression der;
+        Expression expb;
         if (comparar(TipoToken.MINUS)) {
             match(TipoToken.MINUS);
-            factor();
-            term2();
+            operator = previous();
+            der = factor();
+            expb = new ExprBinary(izq, operator, der);
+            return term2(expb);
         } else if (comparar(TipoToken.PLUS)) {
             match(TipoToken.PLUS);
-            factor();
-            term2();
+            operator = previous();
+            der = factor();
+            expb = new ExprBinary(izq, operator, der);
+            return term2(expb);
         }
+        return izq;
     }
 
     // ! FACTOR
@@ -421,24 +472,24 @@ public class Parser {
     }
 
     // ! FACTOR_2
-    private Expression factor2(Expression expr) {
+    private Expression factor2(Expression izq) {
         Token operator;
-        Expression expr2;
+        Expression der;
         ExprBinary expb;
         if (comparar(TipoToken.SLASH)) {
             match(TipoToken.SLASH);
             operator = previous();
-            expr2 = unary();
-            expb = new ExprBinary(expr, operator, expr2);
+            der = unary();
+            expb = new ExprBinary(izq, operator, der);
             return factor2(expb);
         } else if (comparar(TipoToken.STAR)) {
             match(TipoToken.STAR);
             operator = previous();
-            expr2 = unary();
-            expb = new ExprBinary(expr, operator, expr2);
+            der = unary();
+            expb = new ExprBinary(izq, operator, der);
             return factor2(expb);
         }
-        return expr;
+        return izq;
     }
 
     // ! UNARY
@@ -474,13 +525,13 @@ public class Parser {
             List<Expression> argumentList = argumentsOpc();
             match (TipoToken.RIGHT_PAREN);
             ExprCallFunction ecf = new ExprCallFunction(expr, argumentList);
-            call2(ecf);
+            return call2(ecf);
         }
         return expr;
     }
 
     // ! PRIMARY
-    private Expression primary() {
+    private Expression primary() throws Exception {
         if (comparar(TipoToken.IDENTIFIER)) {
             match(TipoToken.IDENTIFIER);
             Token id = previous();
@@ -508,7 +559,7 @@ public class Parser {
             match(TipoToken.RIGHT_PAREN);
             return new ExprGrouping(expr);
         }
-        return null;
+        throw new Exception("PRIMARY ERROR");
     }
 
     // ! FUNCTION
@@ -525,11 +576,19 @@ public class Parser {
 
     // ! FUNCTIONS
     private void functions() {
-        if (comparar(TipoToken.IDENTIFIER)) {
-            match(TipoToken.IDENTIFIER);
-            function();
+        if (comparar(TipoToken.FUN)) {
+            funDeclaration();
             functions();
         }
+    }
+
+    // ! PARAMETERSOPC
+    private List<Token> parametersOpc() {
+        List<Token> id = new ArrayList<>();
+        if (comparar(TipoToken.IDENTIFIER)) {
+            parameters(id);
+        }
+        return id;
     }
 
     // ! PARAMETERS
@@ -537,7 +596,7 @@ public class Parser {
         match(TipoToken.IDENTIFIER);
         Token id = previous();
         identifiers.add(id);
-        parametersOpc();
+        parameters2(identifiers);
     }
 
     // ! PARAMETERS_2
@@ -549,15 +608,6 @@ public class Parser {
             identifiers.add(id);
             parameters(identifiers);
         }
-    }
-
-    // ! PARAMETERSOPC
-    private List<Token> parametersOpc() {
-        List<Token> identifiers = new ArrayList<>();
-        if (comparar(TipoToken.IDENTIFIER)) {
-            parameters(identifiers);
-        }
-        return identifiers;
     }
 
     // ! ARGUMENTSOPC
