@@ -1,10 +1,8 @@
 package parser;
 
-import jdk.jshell.ExpressionSnippet;
 import tools.TipoToken;
 import tools.Token;
 
-import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
 import java.util.List;
 
