@@ -206,7 +206,8 @@ public class Parser {
         } else if (comparar(TipoToken.RETURN)) {
             return returnStmt();
         } else if (comparar(TipoToken.LEFT_BRACE)) {
-            return block();
+            List<Statement> block = new ArrayList<>();
+            return block(block);
         }
         return null;
     }
@@ -258,13 +259,14 @@ public class Parser {
     }
 
     // ! IF_STMT
-    private Object ifStmt() {
+    private Statement ifStmt() {
         match(TipoToken.IF);
         match(TipoToken.LEFT_PAREN);
         Expression conditional = expression();
         match(TipoToken.RIGHT_PAREN);
         Statement then = statement();
         Statement elseStmt = elseStmt();
+        return new StmtIf(conditional, then, elseStmt);
     }
 
     // ! ELSE_STMT
