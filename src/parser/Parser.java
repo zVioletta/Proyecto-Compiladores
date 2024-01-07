@@ -3,7 +3,6 @@ package parser;
 import tools.TipoToken;
 import tools.Token;
 
-import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,10 +144,9 @@ public class Parser {
      */
 
     // ! PROGRAM
-    private List<Statement> program() {
-        List<Statement> program = new ArrayList<>();
-        declaration(program);
-        return program;
+    private void program() {
+        List<Statement> progr = new ArrayList<>();
+        declaration(progr);
     }
 
     // ! DECLARATION
@@ -185,9 +183,10 @@ public class Parser {
 
     // ! VAR_INIT
     private Expression varInit() {
+        Expression expr;
         if (comparar(TipoToken.EQUAL)) {
             match(TipoToken.EQUAL);
-            Expression expr = expression();
+            expr = expression();
             return expr;
         }
         return null;
@@ -205,7 +204,9 @@ public class Parser {
             return whileStmt();
         } else if (comparar(TipoToken.RETURN)) {
             return returnStmt();
-        } else if (comparar(TipoToken.LEFT_BRACE)) {
+        } else if (comparar(TipoToken.PRINT)) {
+            return printStmt();
+        }else if (comparar(TipoToken.LEFT_BRACE)) {
             List<Statement> block = new ArrayList<>();
             return block(block);
         }
@@ -663,10 +664,6 @@ public class Parser {
         }
         Token token = tokens.get(cPos);
         return token.tipo == tipoToken;
-    }
-
-    public void error() {
-        System.out.println("Error on: " + (this.cPos + 1) + ". Expecting:" + this.tokens.get(this.cPos));
     }
 
     private Token previous() {
