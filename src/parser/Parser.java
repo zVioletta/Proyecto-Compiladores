@@ -3,6 +3,7 @@ package parser;
 import tools.TipoToken;
 import tools.Token;
 
+import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,69 +145,77 @@ public class Parser {
      */
 
     // ! PROGRAM
-    private void program() {
-        declaration();
+    private List<Statement> program() {
+        List<Statement> program = new ArrayList<>();
+        declaration(program);
+        return program;
     }
 
     // ! DECLARATION
-    private void declaration() {
+    private void declaration(List<Statement> program) {
         if (comparar(TipoToken.FUN)) {
-            funDeclaration();
-            declaration();
+            Statement function = funDeclaration();
+            program.add(function);
+            declaration(program);
         } else if (comparar(TipoToken.VAR)) {
-            varDeclaration();
-            declaration();
+            program.add(varDeclaration());
+            declaration(program);
         } else {
-            statement();
-            declaration();
+            Statement stmt = statement();
+            program.add(stmt);
+            declaration(program);
         }
     }
 
     // ! FUN_DECLARATION
-    private void funDeclaration() {
+    private Statement funDeclaration() {
         match(TipoToken.FUN);
-        function();
+        return function();
     }
 
     // ! VAR_DECLARATION
-    private void varDeclaration() {
+    private Statement varDeclaration() {
         match(TipoToken.VAR);
         match(TipoToken.IDENTIFIER);
-        varInit();
+        Token id = previous();
+        Expression expr = varInit();
         match(TipoToken.SEMICOLON);
+        return new StmtVar(id, expr);
     }
 
     // ! VAR_INIT
-    private void varInit() {
+    private Expression varInit() {
         if (comparar(TipoToken.EQUAL)) {
             match(TipoToken.EQUAL);
-            expression();
+            Expression expr = expression();
+            return expr;
         }
+        return null;
     }
 
     // ! STATEMENT
     private Statement statement() {
-        if (comparar(TipoToken.LEFT_PAREN) || comparar(TipoToken.IDENTIFIER)) {
-            exprStmt();
+        if (comparar(TipoToken.BANG) || comparar(TipoToken.MINUS) || comparar(TipoToken.TRUE) || comparar(TipoToken.FALSE) || comparar(TipoToken.NULL) || comparar(TipoToken.NUMBER) || comparar(TipoToken.STRING) || comparar(TipoToken.IDENTIFIER) || comparar(TipoToken.LEFT_PAREN)) {
+            return exprStmt();
         } else if (comparar(TipoToken.FOR)) {
-            forStmt();
+            return forStmt();
         } else if (comparar(TipoToken.IF)) {
-            ifStmt();
+            return ifStmt();
         } else if (comparar(TipoToken.WHILE)) {
-            whileStmt();
+            return whileStmt();
         } else if (comparar(TipoToken.RETURN)) {
-            returnStmt();
+            return returnStmt();
         } else if (comparar(TipoToken.LEFT_BRACE)) {
-            block();
-        } else {
-            error();
+            return block();
         }
+        return null;
     }
 
     // ! EXPR_STMT
-    private void exprStmt() {
-        expression();
+    private Statement exprStmt() {
+        Expression expr = expression();
         match(TipoToken.SEMICOLON);
+        return new StmtExpression(expr);
     }
 
     // ! FOR_STMT
@@ -249,54 +258,62 @@ public class Parser {
     }
 
     // ! IF_STMT
-    private void ifStmt() {
+    private Object ifStmt() {
         match(TipoToken.IF);
         match(TipoToken.LEFT_PAREN);
-        expression();
+        Expression conditional = expression();
         match(TipoToken.RIGHT_PAREN);
-        statement();
-        elseStmt();
+        Statement then = statement();
+        Statement elseStmt = elseStmt();
     }
 
     // ! ELSE_STMT
-    private void elseStmt() {
+    private Statement elseStmt() {
         if (comparar(TipoToken.ELSE)) {
             match(TipoToken.ELSE);
-            statement();
+            return statement();
         }
+        return null;
     }
 
     // ! PRINT_STMT
-    private void printStmt() {
+    private Statement printStmt() {
         match(TipoToken.PRINT);
-        expression();
+        Expression expr = expression();
         match(TipoToken.SEMICOLON);
+        return new StmtPrint(expr);
     }
 
     // ! RETURN_STMT
-    private void returnStmt() {
+    private Statement returnStmt() {
         match(TipoToken.RETURN);
-        expression();
+        Expression ret = returnStmtOpc();
         match(TipoToken.SEMICOLON);
+        return new StmtReturn(ret);
+    }
+
+    // ! RETURN_STMT_OPC
+    private Expression returnStmtOpc() {
+        return expression();
     }
 
     // ! WHILE_STMT
-    private void whileStmt() {
+    private Statement whileStmt() {
         match(TipoToken.WHILE);
         match(TipoToken.LEFT_PAREN);
-        expression();
+        Expression expr = expression();
         match(TipoToken.RIGHT_PAREN);
-        statement();
+        Statement stmt = statement();
+        return new StmtLoop(expr, stmt);
     }
 
     // ! BLOCK
-    private Statement block(Statement stmt) {
+    private StmtBlock block(List<Statement> stmt) {
         match(TipoToken.LEFT_BRACE);
-        while (!comparar(TipoToken.RIGHT_BRACE)) {
-            declaration();
-        }
+        stmt = new ArrayList<>();
+        declaration(stmt);
         match(TipoToken.RIGHT_BRACE);
-        return stmt;
+        return new StmtBlock(stmt);
     }
 
     // ! EXPRESSION
@@ -604,22 +621,26 @@ public class Parser {
             match(TipoToken.IDENTIFIER);
             Token id = previous();
             identifiers.add(id);
-            parameters(identifiers);
+            parameters2(identifiers);
         }
     }
 
     // ! ARGUMENTSOPC
-    private void argumentsOpc() {
-        expression();
-        arguments();
+    private List<Expression> argumentsOpc() {
+        List<Expression> argumentList = new ArrayList<>();
+        Expression expr = expression();
+        argumentList.add(expr);
+        arguments(argumentList);
+        return argumentList;
     }
 
     // ! ARGUMENTS
-    private void arguments() {
+    private void arguments(List<Expression> expressions) {
         if (comparar(TipoToken.COMMA)) {
             match(TipoToken.COMMA);
-            expression();
-            arguments();
+            Expression expr = expression();
+            expressions.add(expr);
+            arguments(expressions);
         }
     }
 
