@@ -4,6 +4,7 @@ import tools.TipoToken;
 import tools.Token;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Parser {
@@ -144,9 +145,10 @@ public class Parser {
      */
 
     // ! PROGRAM
-    private void program() {
+    private List<Statement> program() {
         List<Statement> progr = new ArrayList<>();
         declaration(progr);
+        return progr;
     }
 
     // ! DECLARATION
@@ -176,9 +178,9 @@ public class Parser {
         match(TipoToken.VAR);
         match(TipoToken.IDENTIFIER);
         Token id = previous();
-        Expression expr = varInit();
+        Expression init = varInit();
         match(TipoToken.SEMICOLON);
-        return new StmtVar(id, expr);
+        return new StmtVar(id, init);
     }
 
     // ! VAR_INIT
@@ -224,39 +226,54 @@ public class Parser {
     private Statement forStmt() {
         match(TipoToken.FOR);
         match(TipoToken.LEFT_PAREN);
-        forStmt1();
-        match(TipoToken.SEMICOLON);
-        forStmt2();
-        match(TipoToken.SEMICOLON);
-        forStmt3();
+        Statement declaration = forStmt1();
+        Expression condition = forStmt2();
+        Expression increment = forStmt3();
         match(TipoToken.RIGHT_PAREN);
-        statement();
+        Statement code = statement();
+        if (increment != null) {
+            return new StmtBlock(Arrays.asList(code, new StmtExpression(increment)));
+        }
+        if (condition == null) {
+            condition = new ExprLiteral(true);
+        }
+        code = new StmtLoop(condition, code);
+        if (declaration != null) {
+            code = new StmtBlock(Arrays.asList(declaration, code));
+        }
+        return code;
     }
 
     // ! FOR_STMT_1
-    private void forStmt1() {
+    private Statement forStmt1() {
         if (comparar(TipoToken.VAR)) {
-            varDeclaration();
+            return varDeclaration();
         } else if (comparar(TipoToken.SEMICOLON)) {
             match(TipoToken.SEMICOLON);
+            return null;
         } else {
-            exprStmt();
+            return exprStmt();
         }
     }
 
     // ! FOR_STMT_2
-    private void forStmt2() {
+    private Expression forStmt2() {
         if (!comparar(TipoToken.SEMICOLON)) {
-            expression();
+            Expression expr = expression();
+            match(TipoToken.SEMICOLON);
+            return expr;
+        } else {
+            match(TipoToken.SEMICOLON);
+            return null;
         }
-        match(TipoToken.SEMICOLON);
     }
 
     // ! FOR_STMT_3
-    private void forStmt3() {
+    private Expression forStmt3() {
         if (!comparar(TipoToken.RIGHT_PAREN)) {
-            expression();
+            return expression();
         }
+        return null;
     }
 
     // ! IF_STMT
