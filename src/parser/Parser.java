@@ -16,7 +16,7 @@ public class Parser {
         this.tokens = tokens;
     }
 
-    public void parse() {
+    public void parse() throws Exception {
         program();
     }
 
@@ -145,14 +145,14 @@ public class Parser {
      */
 
     // ! PROGRAM
-    private List<Statement> program() {
+    private List<Statement> program() throws Exception {
         List<Statement> progr = new ArrayList<>();
         declaration(progr);
         return progr;
     }
 
     // ! DECLARATION
-    private void declaration(List<Statement> program) {
+    private void declaration(List<Statement> program) throws Exception {
         if (comparar(TipoToken.FUN)) {
             Statement function = funDeclaration();
             program.add(function);
@@ -168,7 +168,7 @@ public class Parser {
     }
 
     // ! FUN_DECLARATION
-    private Statement funDeclaration() {
+    private Statement funDeclaration() throws Exception {
         match(TipoToken.FUN);
         return function();
     }
@@ -195,7 +195,7 @@ public class Parser {
     }
 
     // ! STATEMENT
-    private Statement statement() {
+    private Statement statement() throws Exception {
         if (comparar(TipoToken.BANG) || comparar(TipoToken.MINUS) || comparar(TipoToken.TRUE) || comparar(TipoToken.FALSE) || comparar(TipoToken.NULL) || comparar(TipoToken.NUMBER) || comparar(TipoToken.STRING) || comparar(TipoToken.IDENTIFIER) || comparar(TipoToken.LEFT_PAREN)) {
             return exprStmt();
         } else if (comparar(TipoToken.FOR)) {
@@ -211,8 +211,10 @@ public class Parser {
         }else if (comparar(TipoToken.LEFT_BRACE)) {
             List<Statement> block = new ArrayList<>();
             return block(block);
+        } else {
+            esValida = false;
+            throw new Exception("Expected STATEMENT.");
         }
-        return null;
     }
 
     // ! EXPR_STMT
@@ -223,7 +225,7 @@ public class Parser {
     }
 
     // ! FOR_STMT
-    private Statement forStmt() {
+    private Statement forStmt() throws Exception {
         match(TipoToken.FOR);
         match(TipoToken.LEFT_PAREN);
         Statement declaration = forStmt1();
@@ -277,7 +279,7 @@ public class Parser {
     }
 
     // ! IF_STMT
-    private Statement ifStmt() {
+    private Statement ifStmt() throws Exception {
         match(TipoToken.IF);
         match(TipoToken.LEFT_PAREN);
         Expression conditional = expression();
@@ -288,7 +290,7 @@ public class Parser {
     }
 
     // ! ELSE_STMT
-    private Statement elseStmt() {
+    private Statement elseStmt() throws Exception {
         if (comparar(TipoToken.ELSE)) {
             match(TipoToken.ELSE);
             return statement();
@@ -318,7 +320,7 @@ public class Parser {
     }
 
     // ! WHILE_STMT
-    private Statement whileStmt() {
+    private Statement whileStmt() throws Exception {
         match(TipoToken.WHILE);
         match(TipoToken.LEFT_PAREN);
         Expression expr = expression();
@@ -328,7 +330,7 @@ public class Parser {
     }
 
     // ! BLOCK
-    private StmtBlock block(List<Statement> stmt) {
+    private StmtBlock block(List<Statement> stmt) throws Exception {
         match(TipoToken.LEFT_BRACE);
         stmt = new ArrayList<>();
         declaration(stmt);
@@ -598,7 +600,7 @@ public class Parser {
     }
 
     // ! FUNCTION
-    private Statement function() {
+    private Statement function() throws Exception {
         match(TipoToken.IDENTIFIER);
         Token id = previous();
         match(TipoToken.LEFT_PAREN);
@@ -610,7 +612,7 @@ public class Parser {
     }
 
     // ! FUNCTIONS
-    private void functions() {
+    private void functions() throws Exception {
         if (comparar(TipoToken.FUN)) {
             funDeclaration();
             functions();
