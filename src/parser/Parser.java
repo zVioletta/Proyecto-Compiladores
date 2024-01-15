@@ -208,13 +208,21 @@ public class Parser {
             return returnStmt();
         } else if (comparar(TipoToken.PRINT)) {
             return printStmt();
-        }else if (comparar(TipoToken.LEFT_BRACE)) {
+        } else if (comparar(TipoToken.LEFT_BRACE)) {
             List<Statement> block = new ArrayList<>();
             return block(block);
+        } else if (comparar(TipoToken.EOF)) {
+            return eofStatement();
         } else {
             esValida = false;
             throw new Exception("Expected STATEMENT.");
         }
+    }
+
+    // ! EOF_STATEMENT
+    private Statement eofStatement() throws Exception {
+        match(TipoToken.EOF);
+        return new StmtExpression(new ExprLiteral(null));
     }
 
     // ! EXPR_STMT

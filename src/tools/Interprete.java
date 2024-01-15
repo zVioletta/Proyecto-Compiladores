@@ -56,9 +56,6 @@ public class Interprete {
         try {
             Parser parser = new Parser(tokens);
             parser.parse();
-            if (parser.esValida) {
-                System.out.print("\n>>>Cadena valida<<<\n\n");
-            }
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
         }

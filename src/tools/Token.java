@@ -17,10 +17,6 @@ public class Token {
         this.literal = literal;
     }
 
-    public int getPos(){
-        return this.lexema.length();
-    }
-
     public String toString() {
         return "<" + tipo + " " + lexema + " " + literal + ">";
     }

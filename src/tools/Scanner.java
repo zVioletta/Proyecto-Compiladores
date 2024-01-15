@@ -39,7 +39,7 @@ public class Scanner {
         String lexema = "";
         char c;
 
-        for(int i=0; i<source.length(); i++){
+        for(int i = 0; i < source.length(); i++){
             c = source.charAt(i);
 
             switch (estado){
@@ -370,6 +370,9 @@ public class Scanner {
                     break;
             }
         }
+        Token t = new Token(TipoToken.EOF, "EOF", null);
+        tokens.add(t);
+
         return tokens;
     }
 
